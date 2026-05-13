@@ -228,32 +228,44 @@ main > * {
 }
 
 .hero {
+  background:
+    linear-gradient(90deg, rgba(14, 9, 7, 0.78) 0%, rgba(14, 9, 7, 0.58) 38%, rgba(14, 9, 7, 0.24) 72%, rgba(14, 9, 7, 0.42) 100%),
+    linear-gradient(180deg, rgba(29, 21, 17, 0.28), rgba(29, 21, 17, 0.58)),
+    url("/images/elf-hero.jpg") center center / cover no-repeat,
+    url("/forge-background.svg") center center / cover no-repeat;
+  border: 10px solid rgba(64, 45, 33, 0.78);
+  border-radius: 16px;
+  box-shadow:
+    0 34px 64px rgba(10, 7, 5, 0.46),
+    0 0 0 4px rgba(170, 111, 56, 0.30),
+    inset 0 0 0 4px rgba(255, 218, 143, 0.16),
+    inset 0 0 96px rgba(8, 5, 4, 0.34);
   display: grid;
   gap: 40px;
   grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.6fr);
   min-height: 560px;
-  padding: 76px 0 66px;
+  margin-top: 34px;
+  overflow: hidden;
+  padding: clamp(64px, 8vw, 112px) clamp(22px, 4vw, 54px) clamp(54px, 7vw, 88px);
   position: relative;
 }
 
 .hero::before {
   background:
-    linear-gradient(90deg, rgba(36, 24, 18, 0.62), rgba(36, 24, 18, 0.20) 18%, rgba(255, 248, 234, 0.38) 30% 68%, rgba(36, 24, 18, 0.12) 82%, rgba(36, 24, 18, 0.62)),
-    linear-gradient(0deg, transparent 0 54%, rgba(60, 66, 65, 0.22) 54% 55%, transparent 55% 100%);
-  border: 10px solid rgba(64, 45, 33, 0.74);
-  border-radius: 8px;
+    radial-gradient(circle at 80% 38%, rgba(255, 221, 142, 0.18), transparent 28%),
+    radial-gradient(circle at 18% 82%, rgba(205, 87, 35, 0.26), transparent 26%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 44%, rgba(0, 0, 0, 0.22));
   box-shadow:
-    inset 0 0 0 4px rgba(255, 218, 143, 0.20),
-    inset 0 0 80px rgba(23, 14, 10, 0.26),
-    0 24px 48px var(--forge-shadow);
-  bottom: 56px;
+    inset 0 0 74px rgba(10, 7, 5, 0.38),
+    inset 0 -48px 86px rgba(10, 7, 5, 0.48);
+  bottom: 0;
   content: "";
-  left: -28px;
+  left: 0;
   pointer-events: none;
   position: absolute;
-  right: -28px;
-  top: 44px;
-  z-index: -1;
+  right: 0;
+  top: 0;
+  z-index: 0;
 }
 
 .hero::after {
@@ -272,7 +284,36 @@ main > * {
   right: 24%;
   top: 142px;
   width: 190px;
-  z-index: -1;
+  z-index: 0;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero .eyebrow,
+.hero h1,
+.hero .lead {
+  color: #fff6df;
+}
+
+.hero .eyebrow {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.74);
+}
+
+.hero h1 {
+  text-shadow:
+    0 2px 0 rgba(87, 42, 18, 0.86),
+    0 14px 28px rgba(0, 0, 0, 0.58),
+    0 0 34px rgba(225, 132, 52, 0.28);
+}
+
+.hero .lead {
+  max-width: 760px;
+  text-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.76),
+    0 0 24px rgba(0, 0, 0, 0.42);
 }
 
 .eyebrow {
@@ -1422,6 +1463,7 @@ textarea {
   }
 
   .hero {
+    background-position: 58% center, center, 58% center, center;
     min-height: auto;
     padding-top: 48px;
   }
