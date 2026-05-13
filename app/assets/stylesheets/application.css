@@ -202,7 +202,9 @@ main {
 main::before {
   aspect-ratio: 0.78;
   background:
-    linear-gradient(180deg, rgba(255, 214, 132, 0.12), rgba(13, 8, 6, 0.34)),
+    linear-gradient(180deg, rgba(255, 214, 132, 0.14), rgba(13, 8, 6, 0.28)),
+    url("/elf-peek.svg") center 62% / 112% auto no-repeat,
+    radial-gradient(circle at 50% 34%, rgba(255, 209, 117, 0.22), transparent 58%),
     url("/forge-background.svg") 78% 70% / 1280px auto no-repeat;
   border: 10px solid rgba(51, 37, 28, 0.94);
   border-radius: 34px 34px 16px 16px;
