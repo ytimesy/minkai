@@ -102,6 +102,8 @@ Rails.application.configure do
   # ]
   config.hosts << "ops.com"
   config.hosts << "www.ops.com"
+  config.hosts << "minkai.ops.com"
+  config.hosts << "minkai.formflow-ops.com"
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end

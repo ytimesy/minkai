@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+export RBENV_VERSION="${RBENV_VERSION:-3.3.9}"
+export RAILS_ENV=production
+export RAILS_SERVE_STATIC_FILES=1
+export MINKAI_DATABASE_PATH="${MINKAI_DATABASE_PATH:-$PWD/storage/production.sqlite3}"
+export MINKAI_STORAGE_PATH="${MINKAI_STORAGE_PATH:-$PWD/storage}"
+export PIDFILE="${PIDFILE:-$PWD/tmp/pids/minkai-production.pid}"
+export PORT="${PORT:-3090}"
+export BINDING="${BINDING:-127.0.0.1}"
+
+SECRET_FILE="$PWD/storage/secret_key_base"
+mkdir -p "$PWD/storage" "$PWD/tmp/pids"
+if [ -z "${SECRET_KEY_BASE:-}" ]; then
+  if [ ! -f "$SECRET_FILE" ]; then
+    ruby -rsecurerandom -e 'puts SecureRandom.hex(64)' > "$SECRET_FILE"
+    chmod 600 "$SECRET_FILE"
+  fi
+  export SECRET_KEY_BASE="$(cat "$SECRET_FILE")"
+fi
+
+/Users/ytimesy/.rbenv/shims/bundle check || /Users/ytimesy/.rbenv/shims/bundle install
+/Users/ytimesy/.rbenv/shims/bundle exec rails db:migrate
+/Users/ytimesy/.rbenv/shims/bundle exec rails db:seed
+/Users/ytimesy/.rbenv/shims/bundle exec rails assets:precompile
+
+if [ -f "$PIDFILE" ]; then
+  OLD_PID="$(cat "$PIDFILE")"
+  if kill -0 "$OLD_PID" 2>/dev/null; then
+    kill "$OLD_PID"
+    while kill -0 "$OLD_PID" 2>/dev/null; do
+      sleep 1
+    done
+  fi
+fi
+
+nohup /Users/ytimesy/.rbenv/shims/bundle exec rails server \
+  -e production \
+  -b "$BINDING" \
+  -p "$PORT" \
+  > /private/tmp/minkai-production.log 2>&1 &
+
+echo "$!" > "$PIDFILE"
+echo "みんなの開発村 production server started on http://$BINDING:$PORT"
