@@ -7,6 +7,11 @@
     <p class="eyebrow"><%= @section_label %></p>
     <h1><%= @project.title %></h1>
     <p class="lead compact"><%= @project.summary %></p>
+    <% if @project.category == "ロボット" || @project.component_project? %>
+      <figure class="workspace-robot-image">
+        <img src="/images/robot-hero.jpg" alt="ロボット開発ワークスペースのイメージ">
+      </figure>
+    <% end %>
 
     <% if @project.component_project? && @project.parent_project.present? %>
       <section class="component-parent-banner">
@@ -25,6 +30,17 @@
 
     <% case @section %>
     <% when "overview" %>
+      <section class="document-section toc-panel">
+        <p class="eyebrow">Workspace index</p>
+        <h2>~~~ Robot Development Table of Contents ~~~</h2>
+        <div class="document-nav">
+          <% @project.workspace_sections.each do |section_key, section_label| %>
+            <% path = section_key == "overview" ? project_path(@project) : project_section_path(@project, section: section_key) %>
+            <%= link_to section_label, path %>
+          <% end %>
+        </div>
+      </section>
+
       <section class="maturity-panel">
         <div>
           <p class="eyebrow">Workspace maturity</p>
