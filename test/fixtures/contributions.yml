@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  name: 参加者A
+  role: 機械設計
+  body: 車輪径の検討を手伝えます。
+  kind: 設計レビュー
+
+two:
+  project: two
+  name: 参加者B
+  role: 調理
+  body: 試作記録を出せます。
+  kind: 試作

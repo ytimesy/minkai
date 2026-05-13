@@ -1,0 +1,78 @@
+<main class="project-page">
+  <section class="project-detail">
+    <div class="card-meta">
+      <span><%= @project.category %></span>
+      <span><%= @project.status %></span>
+    </div>
+    <h1><%= @project.title %></h1>
+    <p class="lead compact"><%= @project.summary %></p>
+
+    <div class="canvas-grid">
+      <section>
+        <h2>解きたい課題</h2>
+        <%= simple_format(@project.problem) %>
+      </section>
+      <section>
+        <h2>使う人・影響を受ける人</h2>
+        <%= simple_format(@project.target_users) %>
+      </section>
+      <section>
+        <h2>成功条件</h2>
+        <%= simple_format(@project.success_metric) %>
+      </section>
+      <section>
+        <h2>参加してほしいこと</h2>
+        <p><%= @project.participation_needs %></p>
+      </section>
+    </div>
+  </section>
+
+  <aside class="contribution-panel">
+    <h2>参加メモ</h2>
+
+    <%= form_with model: [@project, @contribution], class: "contribution-form" do |form| %>
+      <% if @contribution.errors.any? %>
+        <div class="errors">
+          <strong>入力内容を確認してください。</strong>
+        </div>
+      <% end %>
+
+      <div class="form-grid">
+        <div class="field">
+          <%= form.label :name, "名前" %>
+          <%= form.text_field :name, placeholder: "表示名" %>
+        </div>
+        <div class="field">
+          <%= form.label :kind, "種類" %>
+          <%= form.select :kind, Contribution::KINDS %>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :role, "立場・得意分野" %>
+        <%= form.text_field :role, placeholder: "例: 機械設計、料理研究、行政実務" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :body, "内容" %>
+        <%= form.text_area :body, rows: 5, placeholder: "提案、懸念、手伝えることを書いてください。" %>
+      </div>
+
+      <%= form.submit "参加メモを追加", class: "button" %>
+    <% end %>
+
+    <div class="contribution-list">
+      <% @project.contributions.order(created_at: :desc).each do |contribution| %>
+        <% next if contribution.new_record? %>
+        <article class="contribution">
+          <div class="card-meta">
+            <span><%= contribution.kind %></span>
+            <span><%= contribution.role %></span>
+          </div>
+          <h3><%= contribution.name %></h3>
+          <%= simple_format(contribution.body) %>
+        </article>
+      <% end %>
+    </div>
+  </aside>
+</main>

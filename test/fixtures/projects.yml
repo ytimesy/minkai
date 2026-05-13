@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: 小型搬送ロボット
+  category: ロボット
+  summary: 避難所で物資を運ぶ
+  problem: 人手不足で運搬が滞る
+  target_users: 避難所運営者
+  success_metric: 20kgを安全に運べる
+  status: 設計中
+  participation_needs: 機械設計
+
+two:
+  title: 余り食材レシピ
+  category: 料理
+  summary: 余り食材を使い切る
+  problem: 食材の無駄が出る
+  target_users: 家庭と子ども食堂
+  success_metric: 30分以内に作れる
+  status: 構想
+  participation_needs: レシピ試作

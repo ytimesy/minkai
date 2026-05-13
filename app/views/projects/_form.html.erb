@@ -1,0 +1,56 @@
+<%= form_with model: project, class: "project-form" do |form| %>
+  <% if project.errors.any? %>
+    <div class="errors">
+      <strong>入力内容を確認してください。</strong>
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title, "開発テーマ名" %>
+    <%= form.text_field :title, placeholder: "例: 災害時に使える小型搬送ロボット" %>
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <%= form.label :category, "領域" %>
+      <%= form.select :category, Project::CATEGORIES, prompt: "選択してください" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :status, "段階" %>
+      <%= form.select :status, Project::STATUSES %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :summary, "一言でいうと" %>
+    <%= form.text_area :summary, rows: 3, placeholder: "何を作り、何を良くするのかを書いてください。" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :problem, "解きたい課題" %>
+    <%= form.text_area :problem, rows: 4, placeholder: "現状の困りごと、制約、未解決の論点。" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :target_users, "使う人・影響を受ける人" %>
+    <%= form.text_area :target_users, rows: 3, placeholder: "誰のための開発か。利用場面も含めて。" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :success_metric, "うまくいったと言える条件" %>
+    <%= form.text_area :success_metric, rows: 3, placeholder: "性能、価格、時間、安全性、満足度などの判断基準。" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :participation_needs, "参加してほしいこと" %>
+    <%= form.text_field :participation_needs, placeholder: "例: 設計レビュー、試作、法制度調査、レシピ検証" %>
+  </div>
+
+  <%= form.submit "開発テーマを公開する", class: "button" %>
+<% end %>
