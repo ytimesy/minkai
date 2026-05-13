@@ -1,5 +1,5 @@
 class Contribution < ApplicationRecord
-  KINDS = %w[アイデア 設計レビュー 調査 試作 協力希望].freeze
+  KINDS = %w[アイデア 設計レビュー 調査 部品候補 試作ログ テスト結果 安全指摘 改善提案 協力希望].freeze
 
   belongs_to :project
 

@@ -152,6 +152,100 @@ robot.development_stages.each do |stage|
   end
 end
 
+robot.project_parts.destroy_all
+[
+  ["駆動", "左右モーター", "移動用", "2", "未定", "未定", "積載に必要なトルクを確認", "調査中"],
+  ["制御", "制御用コンピュータ", "指示解釈と走行制御", "1", "Raspberry Pi級または小型PC", "未定", "放熱と電源容量に注意", "候補調査"],
+  ["安全", "非常停止ボタン", "緊急停止", "1", "押しやすい大型ボタン", "未定", "上面中央に配置", "必須"],
+  ["検知", "距離センサー", "障害物検知", "2以上", "ToFまたは超音波", "未定", "誤検知と死角を試験", "調査中"],
+  ["電源", "低電圧バッテリー", "走行と制御の電源", "1", "保護回路付き", "未定", "ヒューズと電源スイッチを確認", "未検証"]
+].each do |category, name, purpose, quantity, candidate, price, note, status|
+  robot.project_parts.create!(
+    category: category,
+    name: name,
+    purpose: purpose,
+    quantity: quantity,
+    candidate: candidate,
+    estimated_price: price,
+    note: note,
+    status: status
+  )
+end
+
+robot.project_risks.destroy_all
+[
+  ["人に接触する", "転倒、けが", "速度が速い、障害物検知が遅い", "高", "中", "高", "低速制限、障害物検知、非常停止", "停止距離テスト", "死角の評価", "対策設計中"],
+  ["バッテリー異常", "発熱、停止不能", "過負荷、配線不良", "高", "低", "中", "ヒューズ、電源スイッチ、温度監視", "低負荷・高負荷テスト", "温度監視方法", "未検証"],
+  ["通信切断", "意図しない継続走行", "無線不安定、制御PC停止", "中", "中", "中", "通信断で停止するフェイルセーフ", "通信遮断テスト", "復帰手順", "設計中"]
+].each do |hazard, accident, cause, severity, likelihood, level, mitigation, test_method, residual_issue, status|
+  robot.project_risks.create!(
+    hazard: hazard,
+    accident: accident,
+    cause: cause,
+    severity: severity,
+    likelihood: likelihood,
+    level: level,
+    mitigation: mitigation,
+    test_method: test_method,
+    residual_issue: residual_issue,
+    status: status
+  )
+end
+
+robot.project_test_items.destroy_all
+[
+  ["前進指示テスト", "基本指示に1秒以内で反応", "音声・テキストで前進を入力", "1秒以内に低速前進し、ログが残る", "未実施"],
+  ["障害物停止テスト", "前方障害物を検知したら停止", "前方に障害物を置いて低速接近", "接触前に停止する", "未実施"],
+  ["非常停止テスト", "非常停止ボタンで即停止", "走行中に非常停止を押す", "モーター出力が即時停止する", "未実施"],
+  ["30分連続動作テスト", "30分以上の連続動作", "低速巡回を30分継続", "異常停止や過熱がない", "未実施"]
+].each do |title, relation, method, criteria, status|
+  robot.project_test_items.create!(
+    title: title,
+    success_relation: relation,
+    test_method: method,
+    acceptance_criteria: criteria,
+    status: status
+  )
+end
+
+robot.project_tasks.destroy_all
+[
+  ["20kg相当を想定したモーター候補調査", "部品表 > 左右モーター / 要求仕様 > 積載", "募集中", "担当者募集中", "必要トルク、価格、入手性、制御しやすさを比較する。"],
+  ["非常停止ボタン位置レビュー", "安全設計 > 非常停止", "募集中", "レビュー待ち", "上面中央に配置する案の押しやすさと配線を確認する。"],
+  ["Python制御とROS 2構成の比較", "ソフトウェア設計", "募集中", "未着手", "初期MVPに適した制御構成を比較表にする。"],
+  ["障害物停止テスト手順作成", "試験項目 > 障害物停止", "募集中", "未着手", "停止距離、速度、センサー位置の記録方法を決める。"]
+].each do |title, related_area, assignee, status, description|
+  robot.project_tasks.create!(
+    title: title,
+    related_area: related_area,
+    assignee: assignee,
+    status: status,
+    description: description
+  )
+end
+
+robot.project_roles.destroy_all
+[
+  ["機械設計", "フレーム、車輪、重心、積載構造を考える。"],
+  ["電気設計", "電源、モータードライバ、非常停止、センサー配線を考える。"],
+  ["ソフトウェア", "音声コマンド、走行制御、安全停止、ログ保存を実装する。"],
+  ["安全レビュー", "危険源、停止条件、試験項目、運用制約を確認する。"],
+  ["試作協力", "部品調達、組み立て、低速走行テストを行う。"]
+].each do |name, description|
+  robot.project_roles.create!(name: name, description: description, status: "募集中")
+end
+
+robot.project_artifacts.destroy_all
+[
+  ["要求仕様書", "仕様", "MVP範囲、やらないこと、成功条件を整理した文書。", "作成中"],
+  ["システム構成図", "設計図", "入力、指示解釈、行動計画、制御、安全停止の構成図。", "作成中"],
+  ["部品表", "BOM", "駆動、制御、安全、検知、電源の候補部品表。", "作成中"],
+  ["安全設計メモ", "安全", "危険源、対策、試験方法をまとめたリスク台帳。", "作成中"],
+  ["試験結果", "検証", "前進、停止、障害物停止、非常停止の試験結果。", "未着手"]
+].each do |title, kind, notes, status|
+  robot.project_artifacts.create!(title: title, kind: kind, notes: notes, status: status)
+end
+
 recipe = Project.find_or_initialize_by(title: "地域の余り食材を使い切る共同レシピ")
 recipe.update!(
   category: "料理",

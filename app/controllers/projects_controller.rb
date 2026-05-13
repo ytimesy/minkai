@@ -1,4 +1,6 @@
 class ProjectsController < ApplicationController
+  before_action :require_admin!, only: %i[edit update]
+
   def index
     @projects = Project.recent
     @project = Project.new
@@ -76,5 +78,14 @@ class ProjectsController < ApplicationController
         position
       ]
     )
+  end
+
+  def require_admin!
+    return if Rails.env.local? && ENV["MINKAI_ADMIN_PASSWORD"].blank?
+
+    authenticate_or_request_with_http_basic("みんなの開発村 管理") do |_user, password|
+      expected = ENV.fetch("MINKAI_ADMIN_PASSWORD", "")
+      expected.present? && ActiveSupport::SecurityUtils.secure_compare(password, expected)
+    end
   end
 end

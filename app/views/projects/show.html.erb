@@ -4,9 +4,6 @@
       <span><%= @project.category %></span>
       <span><%= @project.status %></span>
     </div>
-    <div class="detail-actions">
-      <%= link_to "開発内容を編集", edit_project_path(@project), class: "button button-small" %>
-    </div>
     <h1><%= @project.title %></h1>
     <p class="lead compact"><%= @project.summary %></p>
 
@@ -19,8 +16,10 @@
       <a href="#safety">安全設計</a>
       <a href="#manufacturing">製造手順</a>
       <a href="#tests">試験項目</a>
+      <a href="#tasks">タスク</a>
       <a href="#log">開発ログ</a>
       <a href="#join">参加募集</a>
+      <a href="#artifacts">成果物</a>
     </div>
 
     <div class="priority-grid">
@@ -30,6 +29,22 @@
       <a href="#safety">安全設計</a>
       <a href="#tests">試験項目</a>
     </div>
+
+    <section class="maturity-panel">
+      <div>
+        <p class="eyebrow">Workspace maturity</p>
+        <h2>開発成熟度 <%= @project.maturity_score %> / 100</h2>
+      </div>
+      <div class="maturity-bars">
+        <% @project.maturity_breakdown.each do |label, value| %>
+          <div class="maturity-row">
+            <span><%= label %></span>
+            <div class="maturity-track"><i style="width: <%= value %>%"></i></div>
+            <strong><%= value %>%</strong>
+          </div>
+        <% end %>
+      </div>
+    </section>
 
     <section class="document-section" id="overview">
       <p class="eyebrow">Overview</p>
@@ -183,6 +198,24 @@
     <section class="document-section" id="bom">
       <p class="eyebrow">Bill of materials</p>
       <h2>部品表</h2>
+      <% if @project.project_parts.any? %>
+        <div class="data-table">
+          <div class="data-head">
+            <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補</span><span>価格</span><span>状態</span>
+          </div>
+          <% @project.project_parts.each do |part| %>
+            <div class="data-row">
+              <span><%= part.category %></span>
+              <span><%= part.name %></span>
+              <span><%= part.purpose %></span>
+              <span><%= part.quantity %></span>
+              <span><%= part.candidate %></span>
+              <span><%= part.estimated_price %></span>
+              <span><%= part.status %></span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
       <%= simple_format(@project.bill_of_materials) %>
     </section>
 
@@ -203,6 +236,25 @@
     <section class="document-section safety-section" id="safety">
       <p class="eyebrow">Safety first</p>
       <h2>安全設計</h2>
+      <% if @project.project_risks.any? %>
+        <div class="risk-grid">
+          <% @project.project_risks.each do |risk| %>
+            <article class="risk-card">
+              <div class="card-meta">
+                <span><%= risk.level %></span>
+                <span><%= risk.status %></span>
+              </div>
+              <h3><%= risk.hazard %></h3>
+              <dl>
+                <div><dt>事故</dt><dd><%= risk.accident %></dd></div>
+                <div><dt>原因</dt><dd><%= risk.cause %></dd></div>
+                <div><dt>対策</dt><dd><%= risk.mitigation %></dd></div>
+                <div><dt>試験</dt><dd><%= risk.test_method %></dd></div>
+              </dl>
+            </article>
+          <% end %>
+        </div>
+      <% end %>
       <%= simple_format(@project.safety_design) %>
     </section>
 
@@ -215,7 +267,34 @@
     <section class="document-section" id="tests">
       <p class="eyebrow">Verification</p>
       <h2>試験項目</h2>
+      <% if @project.project_test_items.any? %>
+        <div class="test-list">
+          <% @project.project_test_items.each do |item| %>
+            <article class="test-item">
+              <strong><%= item.title %></strong>
+              <span><%= item.status %></span>
+              <p><%= item.acceptance_criteria %></p>
+              <small><%= item.test_method %></small>
+            </article>
+          <% end %>
+        </div>
+      <% end %>
       <%= simple_format(@project.test_plan) %>
+    </section>
+
+    <section class="document-section" id="tasks">
+      <p class="eyebrow">Tasks</p>
+      <h2>試作タスク</h2>
+      <div class="task-board">
+        <% @project.project_tasks.each do |task| %>
+          <article>
+            <span><%= task.status %></span>
+            <h3><%= task.title %></h3>
+            <p><%= task.description %></p>
+            <small><%= task.related_area %> / <%= task.assignee.presence || "募集中" %></small>
+          </article>
+        <% end %>
+      </div>
     </section>
 
     <section class="document-section" id="log">
@@ -223,31 +302,39 @@
       <h2>開発ログ</h2>
       <%= simple_format(@project.development_log) %>
     </section>
+
+    <section class="document-section" id="artifacts">
+      <p class="eyebrow">Artifacts</p>
+      <h2>成果物</h2>
+      <div class="artifact-grid">
+        <% @project.project_artifacts.each do |artifact| %>
+          <article>
+            <span><%= artifact.kind %></span>
+            <h3><%= artifact.title %></h3>
+            <p><%= artifact.notes %></p>
+            <% if artifact.url.present? %>
+              <%= link_to "開く", artifact.url, target: "_blank", rel: "noopener" %>
+            <% end %>
+          </article>
+        <% end %>
+      </div>
+    </section>
   </section>
 
   <aside class="contribution-panel" id="join">
     <h2>参加募集</h2>
     <div class="role-grid">
-      <article>
-        <h3>機械設計</h3>
-        <p>フレーム、車輪配置、重心、カバー、保守口。</p>
-      </article>
-      <article>
-        <h3>電気設計</h3>
-        <p>電源構成、非常停止、センサー配線、低電圧試作。</p>
-      </article>
-      <article>
-        <h3>ソフトウェア</h3>
-        <p>音声コマンド、走行制御、ログ保存、安全停止。</p>
-      </article>
-      <article>
-        <h3>安全レビュー</h3>
-        <p>危険源、停止条件、試験項目、運用制約。</p>
-      </article>
+      <% @project.project_roles.each do |role| %>
+        <article>
+          <h3><%= role.name %></h3>
+          <p><%= role.description %></p>
+          <a href="#new_contribution" class="button button-small button-secondary">この役割で参加する</a>
+        </article>
+      <% end %>
     </div>
     <p><%= @project.participation_needs %></p>
 
-    <%= form_with model: [@project, @contribution], class: "contribution-form" do |form| %>
+    <%= form_with model: [@project, @contribution], class: "contribution-form", id: "new_contribution" do |form| %>
       <% if @contribution.errors.any? %>
         <div class="errors">
           <strong>入力内容を確認してください。</strong>

@@ -4,6 +4,12 @@ class Project < ApplicationRecord
 
   has_many :contributions, dependent: :destroy
   has_many :development_stages, -> { order(:position) }, dependent: :destroy
+  has_many :project_parts, dependent: :destroy
+  has_many :project_risks, dependent: :destroy
+  has_many :project_test_items, dependent: :destroy
+  has_many :project_tasks, dependent: :destroy
+  has_many :project_artifacts, dependent: :destroy
+  has_many :project_roles, dependent: :destroy
   accepts_nested_attributes_for :development_stages
 
   validates :title, :category, :summary, :problem, :target_users, :success_metric, presence: true
@@ -15,6 +21,34 @@ class Project < ApplicationRecord
 
   def ensure_development_stages
     build_default_development_stages
+  end
+
+  def maturity_score
+    checks = [
+      problem.present?,
+      target_users.present?,
+      success_metric.present?,
+      specifications.present?,
+      system_architecture.present? || mechanical_design.present? || electrical_design.present? || software_design.present?,
+      project_parts.any? || bill_of_materials.present?,
+      project_risks.any? || safety_design.present?,
+      project_test_items.any? || test_plan.present?,
+      contributions.any?,
+      development_log.present?
+    ]
+
+    (checks.count(true) * 100 / checks.size.to_f).round
+  end
+
+  def maturity_breakdown
+    {
+      "要求仕様" => specifications.present? ? 70 : 20,
+      "設計" => [mechanical_design, electrical_design, software_design].count(&:present?) * 25,
+      "部品表" => project_parts.any? ? 80 : (bill_of_materials.present? ? 40 : 10),
+      "安全" => project_risks.any? ? 85 : (safety_design.present? ? 45 : 10),
+      "試験" => project_test_items.any? ? 80 : (test_plan.present? ? 40 : 10),
+      "参加・ログ" => [[contributions.count * 15, 45].min + (development_log.present? ? 35 : 0), 100].min
+    }
   end
 
   private

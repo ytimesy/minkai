@@ -423,6 +423,52 @@ textarea {
   scroll-margin-top: 92px;
 }
 
+.maturity-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 240px minmax(0, 1fr);
+  margin: 24px 0 8px;
+  padding: 20px;
+}
+
+.maturity-panel h2 {
+  font-size: 22px;
+}
+
+.maturity-bars {
+  display: grid;
+  gap: 10px;
+}
+
+.maturity-row {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 92px 1fr 48px;
+}
+
+.maturity-row span,
+.maturity-row strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.maturity-track {
+  background: #e6eee9;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.maturity-track i {
+  background: var(--accent);
+  display: block;
+  height: 100%;
+}
+
 .canvas-grid {
   display: grid;
   gap: 16px;
@@ -600,6 +646,84 @@ textarea {
   margin: 12px 0 18px;
 }
 
+.data-table {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.data-head,
+.data-row {
+  display: grid;
+  gap: 0;
+  grid-template-columns: 0.8fr 1fr 1.4fr 0.6fr 1fr 0.7fr 0.8fr;
+}
+
+.data-head span,
+.data-row span {
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  font-size: 13px;
+  padding: 10px;
+}
+
+.data-head span {
+  background: #e8f1ed;
+  font-weight: 800;
+}
+
+.risk-grid,
+.test-list,
+.task-board,
+.artifact-grid {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.risk-grid,
+.task-board,
+.artifact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.risk-card,
+.test-item,
+.task-board article,
+.artifact-grid article {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.test-item {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: 1fr auto;
+}
+
+.test-item p,
+.test-item small,
+.task-board p,
+.task-board small,
+.artifact-grid p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.test-item span,
+.task-board span,
+.artifact-grid span {
+  background: #e8f1ed;
+  border-radius: 999px;
+  color: var(--accent-dark);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 9px;
+}
+
 .stage-form-section {
   border-top: 1px solid var(--line);
   display: grid;
@@ -748,6 +872,13 @@ textarea {
   }
 
   .priority-grid,
+  .maturity-panel,
+  .maturity-row,
+  .data-head,
+  .data-row,
+  .risk-grid,
+  .task-board,
+  .artifact-grid,
   .software-flow,
   .wiring-diagram {
     grid-template-columns: 1fr;

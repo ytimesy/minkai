@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_13_164222) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_13_165408) do
   create_table "contributions", force: :cascade do |t|
     t.integer "project_id", null: false
     t.string "name"
@@ -32,6 +32,88 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_13_164222) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_development_stages_on_project_id"
+  end
+
+  create_table "project_artifacts", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "title"
+    t.string "kind"
+    t.string "url"
+    t.text "notes"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_artifacts_on_project_id"
+  end
+
+  create_table "project_parts", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "category"
+    t.string "name"
+    t.text "purpose"
+    t.string "quantity"
+    t.text "candidate"
+    t.string "estimated_price"
+    t.text "source_note"
+    t.text "alternative"
+    t.text "note"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_parts_on_project_id"
+  end
+
+  create_table "project_risks", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "hazard"
+    t.text "accident"
+    t.text "cause"
+    t.string "severity"
+    t.string "likelihood"
+    t.string "level"
+    t.text "mitigation"
+    t.text "test_method"
+    t.text "residual_issue"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_risks_on_project_id"
+  end
+
+  create_table "project_roles", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "name"
+    t.text "description"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_roles_on_project_id"
+  end
+
+  create_table "project_tasks", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "title"
+    t.string "related_area"
+    t.string "assignee"
+    t.string "status"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_tasks_on_project_id"
+  end
+
+  create_table "project_test_items", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "title"
+    t.text "success_relation"
+    t.text "test_method"
+    t.text "acceptance_criteria"
+    t.text "result"
+    t.string "evidence_url"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_test_items_on_project_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -63,4 +145,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_13_164222) do
 
   add_foreign_key "contributions", "projects"
   add_foreign_key "development_stages", "projects"
+  add_foreign_key "project_artifacts", "projects"
+  add_foreign_key "project_parts", "projects"
+  add_foreign_key "project_risks", "projects"
+  add_foreign_key "project_roles", "projects"
+  add_foreign_key "project_tasks", "projects"
+  add_foreign_key "project_test_items", "projects"
 end
