@@ -165,7 +165,6 @@ robot.development_stages.each do |stage|
   end
 end
 
-robot.project_parts.destroy_all
 [
   ["駆動", "左右モーター", "移動用", "2", "未定", "未定", "複数の低速ギヤードモーター", "積載に必要なトルクを確認", "researching", "REQ-006", "TEST-006", "未決定", "調査中"],
   ["制御", "制御用コンピュータ", "指示解釈と走行制御", "1", "Raspberry Pi級または小型PC", "未定", "マイコン単体制御", "放熱と電源容量に注意", "buy", "REQ-001, REQ-002", "TEST-001, TEST-002", "候補あり", "候補調査"],
@@ -173,9 +172,9 @@ robot.project_parts.destroy_all
   ["検知", "距離センサー", "障害物検知", "2以上", "ToFまたは超音波", "未定", "バンパースイッチ併用", "誤検知と死角を試験", "researching", "REQ-003", "TEST-003", "未決定", "調査中"],
   ["電源", "低電圧バッテリー", "走行と制御の電源", "1", "保護回路付き", "未定", "外部ACアダプタ試験", "ヒューズと電源スイッチを確認", "buy", "REQ-006", "TEST-006", "安全レビュー必須", "未検証"]
 ].each do |category, name, purpose, quantity, candidate, price, alternative, note, procurement_policy, requirement_ids, test_ids, development_status, status|
-  robot.project_parts.create!(
+  part = robot.project_parts.find_or_initialize_by(name: name)
+  part.update!(
     category: category,
-    name: name,
     purpose: purpose,
     quantity: quantity,
     candidate: candidate,
