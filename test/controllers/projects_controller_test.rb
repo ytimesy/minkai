@@ -6,6 +6,25 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "index hides component projects" do
+    parent = projects(:one)
+    component = Project.create!(
+      title: "卵モジュール開発",
+      category: "料理",
+      project_type: "component_project",
+      parent_project: parent,
+      summary: "子開発ページ",
+      problem: "親の部品を検討する",
+      target_users: "開発者",
+      success_metric: "候補を決める"
+    )
+
+    get projects_url
+
+    assert_response :success
+    assert_select "h3", text: component.title, count: 0
+  end
+
   test "should get show" do
     get project_url(projects(:one))
     assert_response :success
@@ -35,16 +54,25 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 
   test "project page shows next actions and averaged maturity" do
     project = projects(:one)
+    project.project_tasks.create!(
+      title: "障害物停止テスト手順を作成する",
+      status: "未着手",
+      related_area: "REQ-003 / BOM-004 / SAFE-001 / TEST-003",
+      assignee: "募集中",
+      description: "停止距離と証拠記録の方法を決める。"
+    )
 
     get project_url(project)
 
     assert_response :success
     assert_select "h2", text: "開発成熟度 #{project.maturity_score} / 100"
     assert_select "h2", text: "次にやること"
+    assert_select "h2", text: "関連トレース"
   end
 
   test "test items are separated into structured cards" do
     project = projects(:one)
+    project.update!(test_plan: "□ 前進指示テスト")
 
     get project_section_url(project, section: "tests")
 
@@ -53,6 +81,7 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_select "dt", text: "対応要求ID"
     assert_select "dt", text: "合格基準"
     assert_select "dt", text: "試験方法"
+    assert_select "h2", text: "簡易チェックリスト"
   end
 
   test "bom page shows part id column" do
@@ -95,6 +124,23 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".workspace-role-grid .button", text: "この役割で参加する", minimum: 1
+  end
+
+  test "component motor roadmap uses drive unit wording" do
+    project = projects(:one)
+    part = project_parts(:one)
+    part.update!(name: "左右モーター", purpose: "移動用", procurement_policy: "researching", requirement_ids: "REQ-006", test_ids: "TEST-006")
+
+    post component_project_part_url(project, part)
+    child = part.reload.child_project
+    get project_url(child)
+
+    assert_response :success
+    assert_select "p", text: /必要トルク、速度、積載条件、電源条件/
+    assert_select "p", text: /候補モーター、モータードライバ、車輪径、ギア比/
+    assert_select "p", text: /クリック可能な画面/, count: 0
+    assert_select "p", text: /試作レシピ/, count: 0
+    assert_select "p", text: /制度フロー案/, count: 0
   end
 
   test "food project uses recipe labels" do

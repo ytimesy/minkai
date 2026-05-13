@@ -3,7 +3,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: %i[show section edit update]
 
   def index
-    @projects = Project.recent
+    @projects = Project.where(project_type: "main_project").recent
     @project = Project.new
   end
 

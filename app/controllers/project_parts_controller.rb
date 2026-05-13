@@ -3,15 +3,15 @@ class ProjectPartsController < ApplicationController
   before_action :set_part
 
   def new_component
-    if @part.child_project
-      redirect_to @part.child_project
+    if @part.valid_child_project
+      redirect_to @part.valid_child_project
       return
     end
   end
 
   def create_component
-    if @part.child_project
-      redirect_to @part.child_project, notice: "既存の子開発ページを開きました。"
+    if @part.valid_child_project
+      redirect_to @part.valid_child_project, notice: "既存の子開発ページを開きました。"
       return
     end
 
@@ -27,14 +27,14 @@ class ProjectPartsController < ApplicationController
   end
 
   def sync_from_child
-    child = @part.child_project
+    child = @part.valid_child_project
     unless child
       redirect_to project_section_path(@project, section: "bom"), alert: "子開発ページがありません。"
       return
     end
 
     @part.update!(
-      candidate: child.bill_of_materials.presence || @part.candidate,
+      candidate: params.dig(:project_part, :candidate).presence || child.bill_of_materials.presence || @part.candidate,
       procurement_policy: params.dig(:project_part, :procurement_policy).presence || @part.procurement_policy,
       estimated_price: params.dig(:project_part, :estimated_price).presence || @part.estimated_price,
       status: params.dig(:project_part, :status).presence || "候補確定",

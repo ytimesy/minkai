@@ -1049,7 +1049,8 @@ textarea {
 .test-list,
 .task-board,
 .artifact-grid,
-.section-detail-grid {
+.section-detail-grid,
+.trace-list {
   display: grid;
   gap: 14px;
   margin-bottom: 18px;
@@ -1058,7 +1059,8 @@ textarea {
 .risk-grid,
 .task-board,
 .artifact-grid,
-.section-detail-grid {
+.section-detail-grid,
+.trace-list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -1066,7 +1068,8 @@ textarea {
 .test-item,
 .task-board article,
 .artifact-grid article,
-.section-detail-card {
+.section-detail-card,
+.trace-card {
   background: linear-gradient(180deg, #fffaf0, #ecd2a2);
   border: 1px solid #b98a54;
   border-radius: 8px;
@@ -1164,6 +1167,41 @@ textarea {
 .test-item {
   display: grid;
   gap: 10px;
+}
+
+.trace-card {
+  display: grid;
+  gap: 10px;
+}
+
+.trace-card h3,
+.trace-card p {
+  margin-bottom: 0;
+}
+
+.trace-chain {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.trace-chain span {
+  background: linear-gradient(180deg, #f3f7ee, #dce8cf);
+  border: 1px solid #b8a174;
+  border-radius: 999px;
+  color: var(--accent-dark);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 5px 9px;
+  position: relative;
+}
+
+.trace-chain span:not(:last-child)::after {
+  color: #8b7654;
+  content: "→";
+  font-weight: 900;
+  margin-left: 8px;
 }
 
 .requirement-list,
@@ -1406,6 +1444,7 @@ textarea {
   .compact-task-board,
   .artifact-grid,
   .section-detail-grid,
+  .trace-list,
   .workspace-role-grid,
   .software-flow,
   .wiring-diagram,

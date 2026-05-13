@@ -29,7 +29,7 @@ class ProjectPart < ApplicationRecord
   end
 
   def developable?
-    child_project_id.present? || (DEVELOPABLE_POLICIES.include?(procurement_policy) && !generic_part?)
+    valid_child_project.present? || (DEVELOPABLE_POLICIES.include?(procurement_policy) && !generic_part?)
   end
 
   def generic_part?
@@ -55,5 +55,20 @@ class ProjectPart < ApplicationRecord
     else
       "#{name}モジュール開発"
     end
+  end
+
+  def valid_child_project
+    child_project if child_project_id.present? && child_project&.persisted?
+  rescue ActiveRecord::RecordNotFound
+    nil
+  end
+
+  def child_project_state
+    return "未作成" unless valid_child_project
+    return "親BOMへ反映済み" if development_status == "親BOM反映済み"
+    return "候補確定" if status.to_s.include?("確定")
+    return "候補調査中" if valid_child_project.status.to_s.include?("調査") || development_status.to_s.include?("調査")
+
+    "子開発ページあり"
   end
 end

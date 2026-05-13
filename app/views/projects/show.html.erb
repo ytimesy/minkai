@@ -58,6 +58,28 @@
         </section>
       <% end %>
 
+      <% if @project.traceability_rows.any? %>
+        <section class="document-section">
+          <p class="eyebrow">Traceability</p>
+          <h2>関連トレース</h2>
+          <div class="trace-list">
+            <% @project.traceability_rows.each do |row| %>
+              <article class="trace-card">
+                <div class="trace-chain">
+                  <span><%= row[:requirement].presence || "REQ未設定" %></span>
+                  <span><%= row[:part].presence || "BOM未設定" %></span>
+                  <span><%= row[:safety].presence || "SAFE未設定" %></span>
+                  <span><%= row[:test].presence || "TEST未設定" %></span>
+                  <span><%= row[:task] %></span>
+                </div>
+                <h3><%= row[:title] %></h3>
+                <p><%= row[:status] %></p>
+              </article>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
       <section class="document-section">
         <h2>プロジェクト概要</h2>
         <div class="canvas-grid">
@@ -94,14 +116,14 @@
               </div>
               <div class="card-meta">
                 <span><%= stage.phase %></span>
-                <span><%= @project.food? ? "レシピ" : "設計図" %></span>
+                <span><%= @project.stage_label %></span>
               </div>
               <h3>イメージ図</h3>
-              <p><%= stage.image_description %></p>
+              <p><%= @project.stage_description(stage, :image_description) %></p>
               <h3>モデル</h3>
-              <p><%= stage.model_description %></p>
+              <p><%= @project.stage_description(stage, :model_description) %></p>
               <h3><%= @project.food? ? "レシピメモ" : "設計図メモ" %></h3>
-              <p><%= stage.blueprint_notes %></p>
+              <p><%= @project.stage_description(stage, :blueprint_notes) %></p>
             </article>
           <% end %>
         </div>
@@ -364,16 +386,16 @@
                 <span><%= part.requirement_ids.presence || "未設定" %></span>
                 <span><%= part.test_ids.presence || "未設定" %></span>
                 <span>
-                  <% if part.child_project.present? %>
-                    <%= link_to part.child_project.title, part.child_project %>
+                  <% if part.valid_child_project.present? %>
+                    <%= link_to part.valid_child_project.title, part.valid_child_project %>
                   <% else %>
                     未作成
                   <% end %>
                 </span>
-                <span><%= part.development_status %> / <%= part.status %></span>
+                <span><%= part.child_project_state %> / <%= part.status %></span>
                 <span>
-                  <% if part.child_project.present? %>
-                    <%= link_to "子開発ページを見る", part.child_project, class: "button button-small" %>
+                  <% if part.valid_child_project.present? %>
+                    <%= link_to "子開発ページを見る", part.valid_child_project, class: "button button-small" %>
                   <% elsif part.developable? %>
                     <%= link_to "この部品を開発する", new_component_project_part_path(@project, part), class: "button button-small" %>
                   <% else %>
@@ -466,7 +488,16 @@
             <% end %>
           </div>
         <% end %>
-        <%= simple_format(@project.test_plan) %>
+        <% if @project.test_plan.present? %>
+          <% if @project.project_test_items.any? %>
+            <section class="document-section">
+              <h2>簡易チェックリスト</h2>
+              <%= simple_format(@project.test_plan) %>
+            </section>
+          <% else %>
+            <%= simple_format(@project.test_plan) %>
+          <% end %>
+        <% end %>
       </section>
 
     <% when "tasks" %>
@@ -501,10 +532,11 @@
       <section class="document-section">
         <h2>参加募集</h2>
         <div class="role-grid workspace-role-grid">
-          <% @project.project_roles.each do |role| %>
+          <% @project.role_cards.each do |role| %>
             <article>
-              <h3><%= role.name %></h3>
-              <p><%= role.description %></p>
+              <div class="card-meta"><span><%= role[:status].presence || "募集中" %></span></div>
+              <h3><%= role[:name] %></h3>
+              <p><%= role[:description] %></p>
               <a class="button button-small" href="#new_contribution">この役割で参加する</a>
             </article>
           <% end %>
@@ -571,15 +603,19 @@
               class: "section-detail-form static-form" do |form| %>
               <div class="form-grid">
                 <div class="field">
+                  <%= form.label :candidate, "候補品" %>
+                  <%= form.text_field :candidate, placeholder: "例: 低速ギヤードモーター案A" %>
+                </div>
+                <div class="field">
                   <%= form.label :procurement_policy, "調達方針" %>
                   <%= form.select :procurement_policy, ProjectPart::PROCUREMENT_POLICIES.map { |value, label| [label, value] } %>
                 </div>
+              </div>
+              <div class="form-grid">
                 <div class="field">
                   <%= form.label :estimated_price, "概算価格" %>
                   <%= form.text_field :estimated_price, placeholder: "例: 1,200円" %>
                 </div>
-              </div>
-              <div class="form-grid">
                 <div class="field">
                   <%= form.label :status, "状態" %>
                   <%= form.text_field :status, placeholder: "例: 候補確定" %>

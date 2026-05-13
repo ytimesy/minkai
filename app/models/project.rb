@@ -150,6 +150,48 @@ class Project < ApplicationRecord
     project_tasks.where.not(status: "完了").limit(limit)
   end
 
+  def traceability_rows
+    project_tasks.each_with_index.filter_map do |task, index|
+      ids = {
+        requirement: task.related_requirement_ids.first,
+        part: task.related_part_ids.first,
+        safety: task.related_safety_ids.first,
+        test: task.related_test_ids.first,
+        task: format("TASK-%03d", index + 1)
+      }
+      next if ids.values_at(:requirement, :part, :safety, :test).all?(&:blank?)
+
+      ids.merge(title: task.title, status: task.status)
+    end
+  end
+
+  def role_cards
+    records = project_roles.to_a
+    return records.map { |role| { name: role.name, description: role.description, status: role.status } } if records.any?
+
+    [
+      { name: "機械設計", description: "フレーム、構造、取り付け、重心、保守性を確認する。", status: "募集中" },
+      { name: "電気設計", description: "電源、配線、ドライバ、非常停止、保護回路を確認する。", status: "募集中" },
+      { name: "ソフトウェア", description: "入力、制御、安全停止、ログ、親プロジェクト連携を整理する。", status: "募集中" },
+      { name: "安全レビュー", description: "危険源、停止条件、試験項目、残課題を確認する。", status: "募集中" },
+      { name: "試作協力", description: "部品調達、組み立て、試験、写真・結果記録を行う。", status: "募集中" }
+    ]
+  end
+
+  def stage_label
+    return "部品開発" if component_project?
+
+    food? ? "レシピ" : "設計図"
+  end
+
+  def stage_description(stage, field)
+    if component_project? && source_bom_item.present?
+      component_stage_description(stage.phase, field)
+    else
+      stage.public_send(field)
+    end
+  end
+
   def workspace_sections
     if component_project?
       return {
@@ -205,6 +247,66 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def component_stage_description(phase, field)
+    if source_bom_item.name.to_s.match?(/モーター|駆動/)
+      motor_component_stage_description(phase, field)
+    else
+      general_component_stage_description(phase, field)
+    end
+  end
+
+  def motor_component_stage_description(phase, field)
+    descriptions = {
+      "初期" => {
+        image_description: "必要トルク、速度、積載条件、電源条件を整理する。",
+        model_description: "積載重量、車輪径、目標速度、電圧、連続動作時間の前提を表にする。",
+        blueprint_notes: "親要求、BOM、試験条件へつながる駆動ユニット仕様を定義する。"
+      },
+      "中期" => {
+        image_description: "候補モーター、モータードライバ、車輪径、ギア比を比較する。",
+        model_description: "低速ギヤードモーター、ドライバ容量、減速比、車輪径、発熱条件を比較表にする。",
+        blueprint_notes: "配線、固定方法、制御パラメータ、代替案を設計メモへ落とす。"
+      },
+      "後期" => {
+        image_description: "実機で低速走行、発熱、積載、停止距離を試験する。",
+        model_description: "試作台車に搭載し、負荷、速度、発熱、非常停止時の挙動を確認する。",
+        blueprint_notes: "合格基準、測定値、失敗条件、改善点を試験結果へ反映する。"
+      },
+      "完成" => {
+        image_description: "採用部品、配線、制御パラメータ、試験結果を親BOMへ反映する。",
+        model_description: "採用モーター、ドライバ、車輪、ギア比、制御値を確定した駆動ユニット。",
+        blueprint_notes: "親BOMの候補品、概算価格、調達方針、状態、注意点を更新する。"
+      }
+    }
+    descriptions.fetch(phase).fetch(field)
+  end
+
+  def general_component_stage_description(phase, field)
+    descriptions = {
+      "初期" => {
+        image_description: "親プロジェクトで必要な役割、関連要求、関連試験、制約を整理する。",
+        model_description: "候補案、調達方針、Make or Buy判断、比較観点を表にする。",
+        blueprint_notes: "親BOMへ戻す項目と、未検証リスクを明確にする。"
+      },
+      "中期" => {
+        image_description: "候補品、接続仕様、取り付け条件、代替案を比較する。",
+        model_description: "価格、入手性、実装難易度、安全性、保守性の比較表を作る。",
+        blueprint_notes: "配線、固定、入力・出力、親プロジェクトとの連携仕様を整理する。"
+      },
+      "後期" => {
+        image_description: "試作に組み込み、関連試験と安全レビューを実施する。",
+        model_description: "親プロジェクトの試験条件で検証した候補モジュール。",
+        blueprint_notes: "試験結果、残課題、採用判断を記録する。"
+      },
+      "完成" => {
+        image_description: "採用候補、価格、調達方針、注意点を親BOMへ反映する。",
+        model_description: "親プロジェクトで使える状態に整理された部品・モジュール。",
+        blueprint_notes: "親BOM、関連要求、関連試験、成果物へ反映する。"
+      }
+    }
+    descriptions.fetch(phase).fetch(field)
+  end
 
   def set_defaults
     self.project_type = "main_project" if project_type.blank?
