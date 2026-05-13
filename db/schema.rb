@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_14_021000) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_14_032000) do
   create_table "contributions", force: :cascade do |t|
     t.integer "project_id", null: false
     t.string "name"
@@ -90,6 +90,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_14_021000) do
     t.index ["project_id"], name: "index_project_roles_on_project_id"
   end
 
+  create_table "project_section_details", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.string "section", null: false
+    t.string "subsection"
+    t.string "title", null: false
+    t.string "kind"
+    t.text "body"
+    t.string "status"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id", "section", "subsection"], name: "index_project_section_details_on_area"
+    t.index ["project_id"], name: "index_project_section_details_on_project_id"
+  end
+
   create_table "project_tasks", force: :cascade do |t|
     t.integer "project_id", null: false
     t.string "title"
@@ -152,6 +167,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_14_021000) do
   add_foreign_key "project_parts", "projects"
   add_foreign_key "project_risks", "projects"
   add_foreign_key "project_roles", "projects"
+  add_foreign_key "project_section_details", "projects"
   add_foreign_key "project_tasks", "projects"
   add_foreign_key "project_test_items", "projects"
 end

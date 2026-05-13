@@ -870,7 +870,8 @@ textarea {
 .risk-grid,
 .test-list,
 .task-board,
-.artifact-grid {
+.artifact-grid,
+.section-detail-grid {
   display: grid;
   gap: 14px;
   margin-bottom: 18px;
@@ -878,18 +879,63 @@ textarea {
 
 .risk-grid,
 .task-board,
-.artifact-grid {
+.artifact-grid,
+.section-detail-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .risk-card,
 .test-item,
 .task-board article,
-.artifact-grid article {
+.artifact-grid article,
+.section-detail-card {
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 16px;
+}
+
+.section-detail-workbench {
+  background: #f7faf8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 34px;
+  padding: 20px;
+}
+
+.inline-create-panel {
+  position: relative;
+}
+
+.inline-create-panel summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.inline-create-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-detail-form {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 18px 38px rgba(22, 35, 31, 0.14);
+  margin-top: 12px;
+  padding: 18px;
+  position: absolute;
+  right: 0;
+  width: min(620px, 86vw);
+  z-index: 5;
+}
+
+.section-detail-card {
+  border-left: 5px solid var(--cool);
+}
+
+.section-detail-card small,
+.muted-note {
+  color: var(--muted);
 }
 
 .test-item {
@@ -1077,6 +1123,7 @@ textarea {
   .risk-grid,
   .task-board,
   .artifact-grid,
+  .section-detail-grid,
   .workspace-role-grid,
   .software-flow,
   .wiring-diagram,

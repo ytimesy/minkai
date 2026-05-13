@@ -1,0 +1,18 @@
+one:
+  project: one
+  section: requirements
+  title: 積載条件の詳細
+  kind: 仕様詳細
+  body: 積載重量、重心、床面条件を分けて確認する。
+  status: 検討中
+  position: 1
+
+two:
+  project: one
+  section: blueprints
+  subsection: detail
+  title: 非常停止配線
+  kind: 図面メモ
+  body: 非常停止ボタンからモータードライバまでの遮断経路を整理する。
+  status: 下書き
+  position: 1

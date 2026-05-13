@@ -406,5 +406,12 @@
         </div>
       </section>
     <% end %>
+
+    <%= render "section_details",
+      project: @project,
+      detail: @project_section_detail,
+      details: @section_details,
+      section: @section,
+      subsection: @design_section %>
   </section>
 </main>

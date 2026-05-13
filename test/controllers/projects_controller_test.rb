@@ -22,6 +22,17 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "section pages show detailed design workbench" do
+    project = projects(:one)
+
+    get project_section_url(project, section: "requirements")
+
+    assert_response :success
+    assert_select "h2", text: "細かい設計開発"
+    assert_select "summary", text: "このセクションに追加"
+    assert_select "h3", text: project_section_details(:one).title
+  end
+
   test "should get design subsections" do
     project = projects(:one)
 

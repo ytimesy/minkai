@@ -31,6 +31,7 @@ class Project < ApplicationRecord
   has_many :project_tasks, dependent: :destroy
   has_many :project_artifacts, dependent: :destroy
   has_many :project_roles, dependent: :destroy
+  has_many :project_section_details, dependent: :destroy
   accepts_nested_attributes_for :development_stages
 
   validates :title, :category, :summary, :problem, :target_users, :success_metric, presence: true
@@ -54,7 +55,7 @@ class Project < ApplicationRecord
       project_parts.any? || bill_of_materials.present?,
       project_risks.any? || safety_design.present?,
       project_test_items.any? || test_plan.present?,
-      contributions.any?,
+      contributions.exists? || project_section_details.exists?,
       development_log.present?
     ]
 
@@ -68,8 +69,18 @@ class Project < ApplicationRecord
       "部品表" => project_parts.any? ? 80 : (bill_of_materials.present? ? 40 : 10),
       "安全" => project_risks.any? ? 85 : (safety_design.present? ? 45 : 10),
       "試験" => project_test_items.any? ? 80 : (test_plan.present? ? 40 : 10),
-      "参加・ログ" => [[contributions.count * 15, 45].min + (development_log.present? ? 35 : 0), 100].min
+      "参加・ログ" => [[(contributions.count + project_section_details.count) * 12, 45].min + (development_log.present? ? 35 : 0), 100].min
     }
+  end
+
+  def details_for(section, subsection = nil)
+    scope = project_section_details.where(section: section)
+    scope = if subsection.present?
+              scope.where(subsection: subsection)
+            else
+              scope.where(subsection: [nil, ""])
+            end
+    scope.ordered
   end
 
   private

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     get "sections/:section/:design_section", to: "projects#section", as: :design_section
     get "sections/:section", to: "projects#section", as: :section
     resources :contributions, only: %i[create]
+    resources :section_details, controller: "project_section_details", only: %i[create]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

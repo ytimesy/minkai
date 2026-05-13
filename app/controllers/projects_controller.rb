@@ -68,6 +68,8 @@ class ProjectsController < ApplicationController
     @design_section_label = Project::DESIGN_SECTIONS.fetch(@design_section, nil)
     @project.ensure_development_stages
     @contribution = @project.contributions.build
+    @project_section_detail = @project.project_section_details.build(section: section, subsection: @design_section)
+    @section_details = @project.details_for(section, @design_section)
   end
 
   def project_params

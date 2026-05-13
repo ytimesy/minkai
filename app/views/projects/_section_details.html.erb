@@ -1,0 +1,62 @@
+<section class="document-section section-detail-workbench">
+  <div class="section-heading compact-heading">
+    <div>
+      <p class="eyebrow">自由設計</p>
+      <h2>細かい設計開発</h2>
+    </div>
+    <details class="inline-create-panel">
+      <summary class="button">このセクションに追加</summary>
+      <%= form_with model: [project, detail], url: project_section_details_path(project), class: "section-detail-form" do |form| %>
+        <%= form.hidden_field :section, value: section %>
+        <%= form.hidden_field :subsection, value: subsection %>
+
+        <div class="form-grid">
+          <div class="field">
+            <%= form.label :title, "タイトル" %>
+            <%= form.text_field :title, placeholder: "例: センサー配置の詳細設計" %>
+          </div>
+          <div class="field">
+            <%= form.label :kind, "種類" %>
+            <%= form.select :kind, ProjectSectionDetail::KINDS %>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= form.label :body, "設計内容" %>
+          <%= form.text_area :body, rows: 6, placeholder: "仕様、構成、判断理由、未決事項、次に確認することを自由に書けます。" %>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <%= form.label :status, "状態" %>
+            <%= form.select :status, ProjectSectionDetail::STATUSES %>
+          </div>
+          <div class="field">
+            <%= form.label :position, "表示順" %>
+            <%= form.number_field :position, min: 1, placeholder: "任意" %>
+          </div>
+        </div>
+
+        <%= form.submit "細かい設計を保存", class: "button" %>
+      <% end %>
+    </details>
+  </div>
+
+  <% if details.any? %>
+    <div class="section-detail-grid">
+      <% details.each do |item| %>
+        <article class="section-detail-card">
+          <div class="card-meta">
+            <span><%= item.kind %></span>
+            <span><%= item.status %></span>
+          </div>
+          <h3><%= item.title %></h3>
+          <%= simple_format(item.body) %>
+          <small><%= item.area_label %></small>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="muted-note">このページ専用の細かい設計はまだありません。</p>
+  <% end %>
+</section>
