@@ -101,20 +101,10 @@ class Project < ApplicationRecord
   end
 
   def maturity_score
-    checks = [
-      problem.present?,
-      target_users.present?,
-      success_metric.present?,
-      specifications.present?,
-      basic_design.present? || detail_design.present? || data_transition_design.present? || system_architecture.present? || mechanical_design.present? || electrical_design.present? || software_design.present?,
-      project_parts.any? || bill_of_materials.present?,
-      project_risks.any? || safety_design.present?,
-      project_test_items.any? || test_plan.present?,
-      contributions.exists? || project_section_details.exists?,
-      development_log.present?
-    ]
+    values = maturity_breakdown.values
+    return 0 if values.empty?
 
-    (checks.count(true) * 100 / checks.size.to_f).round
+    (values.sum / values.size.to_f).round
   end
 
   def maturity_breakdown
@@ -136,6 +126,23 @@ class Project < ApplicationRecord
               scope.where(subsection: [nil, ""])
             end
     scope.ordered
+  end
+
+  def requirement_items
+    lines = success_metric.to_s.lines.map(&:strip).reject(&:blank?)
+
+    lines.each_with_index.map do |line, index|
+      cleaned = line.sub(/\A[・\-\u25a1□\s]+/, "")
+      match = cleaned.match(/\A(?<id>REQ-\d{3})[:：\s]*(?<body>.+)\z/)
+      {
+        id: match ? match[:id] : format("REQ-%03d", index + 1),
+        body: match ? match[:body] : cleaned
+      }
+    end
+  end
+
+  def next_tasks(limit = 3)
+    project_tasks.where.not(status: "完了").limit(limit)
   end
 
   def workspace_sections

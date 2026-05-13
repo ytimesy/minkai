@@ -844,14 +844,15 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 8px;
   margin-bottom: 18px;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .data-head,
 .data-row {
   display: grid;
   gap: 0;
-  grid-template-columns: 0.8fr 1fr 1.4fr 0.6fr 1fr 0.7fr 0.8fr;
+  grid-template-columns: 0.8fr 1fr 1.35fr 0.55fr 1fr 0.7fr 1fr 1.2fr 0.8fr;
+  min-width: 1040px;
 }
 
 .data-head span,
@@ -940,8 +941,39 @@ textarea {
 
 .test-item {
   display: grid;
-  gap: 6px;
-  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.requirement-list,
+.spec-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.requirement-list div,
+.spec-list div {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.requirement-list strong {
+  color: var(--accent-dark);
+  display: block;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.spec-list dt {
+  color: var(--accent-dark);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.spec-list dd {
+  margin: 2px 0 0;
 }
 
 .test-item p,
@@ -951,6 +983,17 @@ textarea {
 .artifact-grid p {
   color: var(--muted);
   margin: 0;
+}
+
+.next-actions {
+  background: #f7faf8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.compact-task-board {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .test-item span,
@@ -1122,6 +1165,7 @@ textarea {
   .data-row,
   .risk-grid,
   .task-board,
+  .compact-task-board,
   .artifact-grid,
   .section-detail-grid,
   .workspace-role-grid,

@@ -26,6 +26,23 @@
         </div>
       </section>
 
+      <% if @project.next_tasks.any? %>
+        <section class="document-section next-actions">
+          <p class="eyebrow">Next actions</p>
+          <h2>次にやること</h2>
+          <div class="task-board compact-task-board">
+            <% @project.next_tasks.each_with_index do |task, index| %>
+              <article>
+                <span><%= format("TASK-%03d", index + 1) %></span>
+                <h3><%= task.title %></h3>
+                <p><%= task.description %></p>
+                <small><%= task.related_area %> / <%= task.assignee.presence || "募集中" %></small>
+              </article>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
       <section class="document-section">
         <h2>プロジェクト概要</h2>
         <div class="canvas-grid">
@@ -93,7 +110,14 @@
           </section>
           <section>
             <h3><%= @project.food? ? "おいしさ・再現条件" : "成功条件" %></h3>
-            <%= simple_format(@project.success_metric) %>
+            <div class="requirement-list">
+              <% @project.requirement_items.each do |item| %>
+                <div>
+                  <strong><%= item[:id] %></strong>
+                  <span><%= item[:body] %></span>
+                </div>
+              <% end %>
+            </div>
           </section>
           <section>
             <h3><%= @project.food? ? "レシピ条件" : "仕様" %></h3>
@@ -305,9 +329,9 @@
           <div class="data-table">
             <div class="data-head">
               <% if @project.food? %>
-                <span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>状態</span>
+                <span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>代替案</span><span>注意点</span><span>状態</span>
               <% else %>
-                <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補</span><span>価格</span><span>状態</span>
+                <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補品</span><span>概算価格</span><span>代替案</span><span>注意点</span><span>状態</span>
               <% end %>
             </div>
             <% @project.project_parts.each do |part| %>
@@ -318,12 +342,15 @@
                 <span><%= part.quantity %></span>
                 <span><%= part.candidate %></span>
                 <span><%= part.estimated_price %></span>
+                <span><%= part.alternative %></span>
+                <span><%= part.note %></span>
                 <span><%= part.status %></span>
               </div>
             <% end %>
           </div>
+        <% else %>
+          <%= simple_format(@project.bill_of_materials) %>
         <% end %>
-        <%= simple_format(@project.bill_of_materials) %>
       </section>
 
     <% when "software" %>
@@ -385,12 +412,20 @@
         <h2><%= @section_label %></h2>
         <% if @project.project_test_items.any? %>
           <div class="test-list">
-            <% @project.project_test_items.each do |item| %>
+            <% @project.project_test_items.each_with_index do |item, index| %>
               <article class="test-item">
-                <strong><%= item.title %></strong>
-                <span><%= item.status %></span>
-                <p><%= item.acceptance_criteria %></p>
-                <small><%= item.test_method %></small>
+                <div class="card-meta">
+                  <span><%= format("TEST-%03d", index + 1) %></span>
+                  <span><%= item.status %></span>
+                </div>
+                <h3><%= item.title %></h3>
+                <dl class="spec-list">
+                  <div><dt>対応要求</dt><dd><%= item.success_relation %></dd></div>
+                  <div><dt>合格基準</dt><dd><%= item.acceptance_criteria %></dd></div>
+                  <div><dt>試験方法</dt><dd><%= item.test_method %></dd></div>
+                  <div><dt>結果</dt><dd><%= item.result.presence || "未記録" %></dd></div>
+                  <div><dt>証拠URL</dt><dd><%= item.evidence_url.present? ? link_to(item.evidence_url, item.evidence_url, target: "_blank", rel: "noopener") : "未登録" %></dd></div>
+                </dl>
               </article>
             <% end %>
           </div>
@@ -402,12 +437,15 @@
       <section class="document-section">
         <h2><%= @section_label %></h2>
         <div class="task-board">
-          <% @project.project_tasks.each do |task| %>
+          <% @project.project_tasks.each_with_index do |task, index| %>
             <article>
-              <span><%= task.status %></span>
+              <span><%= format("TASK-%03d", index + 1) %> / <%= task.status %></span>
               <h3><%= task.title %></h3>
               <p><%= task.description %></p>
-              <small><%= task.related_area %> / <%= task.assignee.presence || "募集中" %></small>
+              <dl class="spec-list">
+                <div><dt>関連先</dt><dd><%= task.related_area %></dd></div>
+                <div><dt>担当</dt><dd><%= task.assignee.presence || "募集中" %></dd></div>
+              </dl>
             </article>
           <% end %>
         </div>
@@ -427,6 +465,7 @@
             <article>
               <h3><%= role.name %></h3>
               <p><%= role.description %></p>
+              <a class="button button-small" href="#new_contribution">この役割で参加する</a>
             </article>
           <% end %>
         </div>
@@ -484,7 +523,10 @@
         <div class="artifact-grid">
           <% @project.project_artifacts.each do |artifact| %>
             <article>
-              <span><%= artifact.kind %></span>
+              <div class="card-meta">
+                <span><%= artifact.kind %></span>
+                <span><%= artifact.status.presence || "未作成" %></span>
+              </div>
               <h3><%= artifact.title %></h3>
               <p><%= artifact.notes %></p>
               <% if artifact.url.present? %>

@@ -33,6 +33,37 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: project_section_details(:one).title
   end
 
+  test "project page shows next actions and averaged maturity" do
+    project = projects(:one)
+
+    get project_url(project)
+
+    assert_response :success
+    assert_select "h2", text: "開発成熟度 #{project.maturity_score} / 100"
+    assert_select "h2", text: "次にやること"
+  end
+
+  test "test items are separated into structured cards" do
+    project = projects(:one)
+
+    get project_section_url(project, section: "tests")
+
+    assert_response :success
+    assert_select ".test-item h3", minimum: 1
+    assert_select "dt", text: "対応要求"
+    assert_select "dt", text: "合格基準"
+    assert_select "dt", text: "試験方法"
+  end
+
+  test "join page shows role action buttons" do
+    project = projects(:one)
+
+    get project_section_url(project, section: "join")
+
+    assert_response :success
+    assert_select ".workspace-role-grid .button", text: "この役割で参加する", minimum: 1
+  end
+
   test "food project uses recipe labels" do
     project = projects(:two)
 
