@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_13_165408) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_14_021000) do
   create_table "contributions", force: :cascade do |t|
     t.integer "project_id", null: false
     t.string "name"
@@ -141,6 +141,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_13_165408) do
     t.text "development_log"
     t.text "bill_of_materials"
     t.text "next_prototype"
+    t.text "basic_design"
+    t.text "detail_design"
+    t.text "data_transition_design"
   end
 
   add_foreign_key "contributions", "projects"

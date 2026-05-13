@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root "projects#index"
 
   resources :projects, only: %i[index show new create edit update] do
+    get "sections/:section/:design_section", to: "projects#section", as: :design_section
     get "sections/:section", to: "projects#section", as: :section
     resources :contributions, only: %i[create]
   end

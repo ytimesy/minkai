@@ -83,6 +83,23 @@
       <%= form.text_area :system_architecture, rows: 5, placeholder: "入力、指示解釈、行動計画、制御、安全停止の流れ。" %>
     </div>
 
+    <div class="field">
+      <%= form.label :basic_design, "基本設計" %>
+      <%= form.text_area :basic_design, rows: 6, placeholder: "目的、MVP範囲、全体構成、主要機能、画面・構造の大枠。" %>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <%= form.label :detail_design, "詳細設計" %>
+        <%= form.text_area :detail_design, rows: 6, placeholder: "基本設計を実装・試作できる粒度に分解。例外処理、部品配置、制御、運用も記録。" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :data_transition_design, "データ遷移設計" %>
+        <%= form.text_area :data_transition_design, rows: 6, placeholder: "入力、状態、成果物、レビュー、試験結果がどの順序で変化するか。" %>
+      </div>
+    </div>
+
     <div class="form-grid">
       <div class="field">
         <%= form.label :mechanical_design, "機械設計" %>

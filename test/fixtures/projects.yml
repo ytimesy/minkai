@@ -11,6 +11,9 @@ one:
   participation_needs: 機械設計
   specifications: 積載20kg、段差2cm、連続稼働1時間
   features: 手押し補助、自律追従、緊急停止
+  basic_design: 屋内低速搬送ロボットの基本構成
+  detail_design: 二輪差動、低電圧電源、非常停止を詳細化
+  data_transition_design: 要求仕様から試験結果までを記録する
 
 two:
   title: 余り食材レシピ
@@ -23,3 +26,6 @@ two:
   participation_needs: レシピ試作
   specifications: 主材料3種類以内、調理30分以内
   features: 食材入力、代替材料候補、試作メモ
+  basic_design: 食材入力からレシピ提案までの基本構成
+  detail_design: 材料、分量、調理工程、保存条件を詳細化
+  data_transition_design: 試作ログから再現テスト結果へ反映する

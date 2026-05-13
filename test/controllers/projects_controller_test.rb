@@ -22,6 +22,17 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "should get design subsections" do
+    project = projects(:one)
+
+    Project::DESIGN_SECTIONS.each_key do |design_section|
+      next if design_section == "overview"
+
+      get project_design_section_url(project, section: "blueprints", design_section: design_section)
+      assert_response :success
+    end
+  end
+
   test "should get new" do
     get new_project_url
     assert_response :success
@@ -72,6 +83,9 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
         intended_uses: "教材と施設内案内",
         scope_limits: "人を乗せない",
         system_architecture: "入力から安全停止まで",
+        basic_design: "MVP範囲と全体構成",
+        detail_design: "部品配置と例外処理",
+        data_transition_design: "仕様から試験結果までの状態遷移",
         mechanical_design: "二輪差動",
         electrical_design: "低電圧構成",
         software_design: "Python制御",
@@ -97,6 +111,9 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to project_url(project)
     project.reload
     assert_equal "耐荷重30kgに更新", project.specifications
+    assert_equal "MVP範囲と全体構成", project.basic_design
+    assert_equal "部品配置と例外処理", project.detail_design
+    assert_equal "仕様から試験結果までの状態遷移", project.data_transition_design
     assert_equal "非常停止と障害物停止", project.safety_design
     assert_equal "モーター / 駆動 / 2", project.bill_of_materials
     assert_equal "更新した構想図", development_stages(:one).reload.image_description

@@ -17,7 +17,12 @@ class ProjectsController < ApplicationController
       return
     end
 
-    prepare_workspace(params[:section])
+    if params[:section] == "blueprints" && params[:design_section].present? && !Project::DESIGN_SECTIONS.key?(params[:design_section])
+      redirect_to project_section_path(@project, section: "blueprints"), alert: "指定された設計ページはありません。"
+      return
+    end
+
+    prepare_workspace(params[:section], params[:design_section])
     render :show
   end
 
@@ -56,9 +61,11 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id] || params[:project_id])
   end
 
-  def prepare_workspace(section)
+  def prepare_workspace(section, design_section = nil)
     @section = section
     @section_label = Project::WORKSPACE_SECTIONS.fetch(section)
+    @design_section = section == "blueprints" ? (design_section.presence || "overview") : nil
+    @design_section_label = Project::DESIGN_SECTIONS.fetch(@design_section, nil)
     @project.ensure_development_stages
     @contribution = @project.contributions.build
   end
@@ -78,6 +85,9 @@ class ProjectsController < ApplicationController
       :intended_uses,
       :scope_limits,
       :system_architecture,
+      :basic_design,
+      :detail_design,
+      :data_transition_design,
       :mechanical_design,
       :electrical_design,
       :software_design,
