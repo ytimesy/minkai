@@ -22,6 +22,10 @@
   --panel: #fff8ea;
   --accent: #8f3f1d;
   --accent-dark: #5e2614;
+  --forest: #2f5b45;
+  --forest-dark: #18362c;
+  --wood: #7a4a2a;
+  --moss: #8aa66b;
   --warm: #d9902f;
   --cool: #4d6474;
   --draft: #e3d0ac;
@@ -64,10 +68,10 @@ body::before {
 
 body::before {
   background:
-    linear-gradient(90deg, rgba(18, 13, 10, 0.86), rgba(61, 45, 34, 0.68) 7%, transparent 16% 84%, rgba(61, 45, 34, 0.68) 93%, rgba(18, 13, 10, 0.86)),
-    linear-gradient(180deg, rgba(18, 13, 10, 0.82), rgba(72, 51, 35, 0.42) 8%, transparent 20% 82%, rgba(34, 24, 18, 0.56) 94%, rgba(18, 13, 10, 0.86)),
-    linear-gradient(90deg, rgba(255, 220, 156, 0.11) 1px, transparent 1px),
-    linear-gradient(rgba(255, 220, 156, 0.08) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(18, 13, 10, 0.86), rgba(47, 66, 45, 0.70) 7%, transparent 16% 84%, rgba(94, 62, 37, 0.72) 93%, rgba(18, 13, 10, 0.86)),
+    linear-gradient(180deg, rgba(18, 13, 10, 0.82), rgba(54, 82, 58, 0.42) 8%, transparent 20% 82%, rgba(70, 43, 27, 0.58) 94%, rgba(18, 13, 10, 0.86)),
+    linear-gradient(90deg, rgba(202, 228, 166, 0.10) 1px, transparent 1px),
+    linear-gradient(rgba(190, 132, 70, 0.10) 1px, transparent 1px);
   background-size: auto, auto, 72px 42px, 72px 42px;
   box-shadow:
     inset 52px 0 70px rgba(10, 7, 5, 0.62),
@@ -92,9 +96,9 @@ a {
 .site-header {
   align-items: stretch;
   background:
-    linear-gradient(180deg, rgba(255, 248, 234, 0.96), rgba(224, 194, 142, 0.96)),
-    linear-gradient(90deg, rgba(143, 63, 29, 0.14), rgba(60, 66, 65, 0.12));
-  border-bottom: 1px solid #9e7545;
+    linear-gradient(180deg, rgba(255, 248, 234, 0.96), rgba(220, 197, 148, 0.94)),
+    linear-gradient(120deg, rgba(47, 91, 69, 0.24), rgba(122, 74, 42, 0.22) 54%, rgba(143, 63, 29, 0.18));
+  border-bottom: 1px solid #82643c;
   box-shadow:
     0 18px 38px rgba(16, 9, 6, 0.34),
     0 4px 0 rgba(74, 33, 20, 0.20),
@@ -160,8 +164,8 @@ nav a {
 }
 
 .workspace-header-nav a {
-  background: linear-gradient(#fff8ea, #e9d2a7);
-  border: 1px solid #b98a54;
+  background: linear-gradient(180deg, #fff8ea, #e6d4aa 62%, #d3bb87);
+  border: 1px solid #9c7b4d;
   border-radius: 999px;
   color: var(--accent-dark);
   flex: 0 0 auto;
@@ -170,8 +174,8 @@ nav a {
 }
 
 .workspace-header-nav a.active {
-  background: linear-gradient(#b75a2a, #7c3218);
-  border-color: #5e2614;
+  background: linear-gradient(135deg, var(--forest), #6e4b28 58%, #7c3218);
+  border-color: #274633;
   box-shadow: inset 0 1px 0 rgba(255, 224, 156, 0.35), 0 3px 8px rgba(54, 29, 12, 0.25);
   color: #ffffff;
 }
@@ -188,9 +192,9 @@ main > * {
 
 .hero {
   background:
-    linear-gradient(90deg, rgba(14, 9, 7, 0.78) 0%, rgba(14, 9, 7, 0.58) 38%, rgba(14, 9, 7, 0.24) 72%, rgba(14, 9, 7, 0.42) 100%),
-    linear-gradient(180deg, rgba(29, 21, 17, 0.18), rgba(29, 21, 17, 0.46));
-  border: 10px solid rgba(64, 45, 33, 0.78);
+    linear-gradient(90deg, rgba(14, 9, 7, 0.78) 0%, rgba(31, 55, 42, 0.58) 38%, rgba(14, 9, 7, 0.24) 72%, rgba(75, 45, 27, 0.48) 100%),
+    linear-gradient(180deg, rgba(29, 45, 33, 0.18), rgba(43, 26, 17, 0.50));
+  border: 10px solid rgba(73, 68, 43, 0.78);
   border-radius: 16px;
   box-shadow:
     0 34px 64px rgba(10, 7, 5, 0.46),
@@ -209,8 +213,8 @@ main > * {
 
 .hero::before {
   background:
-    radial-gradient(circle at 80% 38%, rgba(255, 221, 142, 0.18), transparent 28%),
-    radial-gradient(circle at 18% 82%, rgba(205, 87, 35, 0.26), transparent 26%),
+    radial-gradient(circle at 80% 38%, rgba(202, 228, 166, 0.18), transparent 28%),
+    radial-gradient(circle at 18% 82%, rgba(190, 102, 45, 0.26), transparent 26%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 44%, rgba(0, 0, 0, 0.22));
   box-shadow:
     inset 0 0 74px rgba(10, 7, 5, 0.38),
@@ -337,8 +341,8 @@ h3 {
 
 .button {
   background:
-    linear-gradient(180deg, #c46631, #8f3f1d 58%, #632816);
-  border: 1px solid #5e2614;
+    linear-gradient(180deg, #d38a3d, #8f5c2d 42%, #31533e 100%);
+  border: 1px solid #274633;
   border-radius: 8px;
   color: #fff;
   cursor: pointer;
@@ -360,12 +364,12 @@ h3 {
 }
 
 .button:hover {
-  background: linear-gradient(180deg, #d1763b, #9a4723 58%, #6b2d18);
+  background: linear-gradient(180deg, #df9848, #9b6633 42%, #386248 100%);
   transform: translateY(-1px);
 }
 
 .button-secondary {
-  background: linear-gradient(#fff8ea, #ead2a9);
+  background: linear-gradient(180deg, #fff8ea, #e8d7ad 58%, #bfd0a1);
   color: var(--accent-dark);
 }
 
@@ -380,8 +384,8 @@ h3 {
 .project-form,
 .project-detail,
 .contribution-panel {
-  background: var(--panel);
-  border: 1px solid #b98a54;
+  background: linear-gradient(145deg, rgba(255, 248, 234, 0.96), rgba(232, 217, 177, 0.95) 48%, rgba(210, 224, 187, 0.90));
+  border: 1px solid #95764b;
   border-radius: 8px;
   box-shadow:
     0 18px 0 rgba(94, 38, 20, 0.12),
@@ -397,7 +401,7 @@ h3 {
   background:
     linear-gradient(90deg, rgba(85, 65, 42, 0.12) 1px, transparent 1px),
     linear-gradient(rgba(85, 65, 42, 0.12) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(217, 184, 127, 0.30)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(214, 193, 140, 0.32) 54%, rgba(111, 143, 101, 0.22)),
     var(--panel);
   background-size: 18px 18px;
   padding: 26px;
@@ -437,7 +441,7 @@ h3 {
 }
 
 .design-board span {
-  background: linear-gradient(180deg, #f0b356, #be7627);
+  background: linear-gradient(180deg, #d8ba66, #7f8e4e 48%, #557046);
   box-shadow: inset 0 1px 0 rgba(255, 236, 180, 0.55), 0 3px 6px rgba(54, 29, 12, 0.20);
   color: #2e2714;
   width: 28px;
@@ -460,9 +464,9 @@ h3 {
 }
 
 .project-card {
-  background: linear-gradient(180deg, #fff8ea, #f1ddba);
-  border: 1px solid #b98a54;
-  border-top: 5px solid var(--accent);
+  background: linear-gradient(145deg, rgba(255, 248, 234, 0.97), rgba(239, 220, 183, 0.96) 52%, rgba(213, 226, 195, 0.92));
+  border: 1px solid #98784b;
+  border-top: 5px solid var(--forest);
   border-radius: 8px;
   box-shadow:
     0 11px 0 rgba(94, 38, 20, 0.14),
@@ -487,7 +491,7 @@ h3 {
 }
 
 .project-card::after {
-  background: var(--warm);
+  background: linear-gradient(135deg, var(--moss), var(--wood));
   border-radius: 999px;
   content: "";
   height: 10px;
@@ -523,7 +527,7 @@ h3 {
 }
 
 .card-meta span {
-  background: linear-gradient(#efe1c6, #d8b884);
+  background: linear-gradient(180deg, #efe1c6, #d8c08d 55%, #bed1a3);
   border: 1px solid rgba(94, 38, 20, 0.18);
   color: var(--accent-dark);
   padding: 4px 10px;
@@ -580,8 +584,8 @@ label {
 input,
 select,
 textarea {
-  background: linear-gradient(#fffaf0, #f3dfbd);
-  border: 1px solid #b98a54;
+  background: linear-gradient(180deg, #fffaf0, #f0e2c2 64%, #dfe7cf);
+  border: 1px solid #9b7a4c;
   border-radius: 8px;
   color: var(--ink);
   font: inherit;
@@ -667,13 +671,13 @@ textarea {
 }
 
 .document-nav a {
-  background: #eef4f0;
+  background: linear-gradient(180deg, #f3f7ee, #dce8cf);
   color: var(--accent-dark);
   padding: 7px 11px;
 }
 
 .document-nav a.active {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--forest), var(--wood));
   color: #ffffff;
 }
 
@@ -683,9 +687,9 @@ textarea {
 }
 
 .priority-grid a {
-  background: var(--panel);
+  background: linear-gradient(145deg, #fff8ea, #ead9b1 58%, #d7e2c4);
   border: 1px solid var(--line);
-  border-left: 5px solid var(--warm);
+  border-left: 5px solid var(--forest);
   border-radius: 8px;
   box-shadow: 0 10px 28px rgba(22, 35, 31, 0.06);
   min-height: 74px;
@@ -700,8 +704,8 @@ textarea {
 }
 
 .maturity-panel {
-  background: linear-gradient(180deg, #fff8ea, #ecd3a7);
-  border: 1px solid #b98a54;
+  background: linear-gradient(145deg, #fff8ea, #ecd6ac 52%, #d4e1c0);
+  border: 1px solid #98784b;
   border-radius: 8px;
   box-shadow:
     0 16px 0 rgba(94, 38, 20, 0.11),
@@ -744,7 +748,7 @@ textarea {
 }
 
 .maturity-track i {
-  background: var(--accent);
+  background: linear-gradient(90deg, var(--forest), var(--moss), var(--wood));
   display: block;
   height: 100%;
 }
