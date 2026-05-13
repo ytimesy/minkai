@@ -37,11 +37,11 @@ if [ -f "$PIDFILE" ]; then
   fi
 fi
 
-nohup /Users/ytimesy/.rbenv/shims/bundle exec rails server \
+/Users/ytimesy/.rbenv/shims/bundle exec rails server \
+  --daemon \
   -e production \
   -b "$BINDING" \
   -p "$PORT" \
-  > /private/tmp/minkai-production.log 2>&1 &
+  --pid "$PIDFILE"
 
-echo "$!" > "$PIDFILE"
 echo "みんなの開発村 production server started on http://$BINDING:$PORT"
