@@ -50,9 +50,42 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".test-item h3", minimum: 1
-    assert_select "dt", text: "対応要求"
+    assert_select "dt", text: "対応要求ID"
     assert_select "dt", text: "合格基準"
     assert_select "dt", text: "試験方法"
+  end
+
+  test "bom page shows part id column" do
+    project = projects(:one)
+
+    get project_section_url(project, section: "bom")
+
+    assert_response :success
+    assert_select ".data-head span", text: "ID"
+    assert_select ".data-row span", text: "PART-001"
+  end
+
+  test "task page shows separated related ids" do
+    project = projects(:one)
+    project.project_tasks.create!(
+      title: "関連ID表示確認",
+      status: "未着手",
+      related_area: "REQ-003 / PART-004 / SAFE-001 / TEST-003",
+      assignee: "募集中",
+      description: "関連先を分けて表示する。"
+    )
+
+    get project_section_url(project, section: "tasks")
+
+    assert_response :success
+    assert_select "dt", text: "関連要求ID"
+    assert_select "dd", text: "REQ-003"
+    assert_select "dt", text: "関連部品ID"
+    assert_select "dd", text: "PART-004"
+    assert_select "dt", text: "関連安全項目ID"
+    assert_select "dd", text: "SAFE-001"
+    assert_select "dt", text: "関連試験ID"
+    assert_select "dd", text: "TEST-003"
   end
 
   test "join page shows role action buttons" do

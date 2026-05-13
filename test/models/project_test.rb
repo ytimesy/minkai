@@ -33,4 +33,17 @@ class ProjectTest < ActiveSupport::TestCase
     assert_equal "REQ-001", project.requirement_items.first[:id]
     assert_equal "20kgを安全に運べる", project.requirement_items.first[:body]
   end
+
+  test "task extracts related traceability ids" do
+    task = projects(:one).project_tasks.build(
+      title: "関連ID抽出",
+      status: "未着手",
+      related_area: "REQ-003 / PART-004 / SAFE-001 / TEST-003"
+    )
+
+    assert_equal ["REQ-003"], task.related_requirement_ids
+    assert_equal ["PART-004"], task.related_part_ids
+    assert_equal ["SAFE-001"], task.related_safety_ids
+    assert_equal ["TEST-003"], task.related_test_ids
+  end
 end

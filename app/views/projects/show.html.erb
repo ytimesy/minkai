@@ -329,13 +329,14 @@
           <div class="data-table">
             <div class="data-head">
               <% if @project.food? %>
-                <span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>代替案</span><span>注意点</span><span>状態</span>
+                <span>ID</span><span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>代替案</span><span>注意点</span><span>状態</span>
               <% else %>
-                <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補品</span><span>概算価格</span><span>代替案</span><span>注意点</span><span>状態</span>
+                <span>ID</span><span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補品</span><span>概算価格</span><span>代替案</span><span>注意点</span><span>状態</span>
               <% end %>
             </div>
             <% @project.project_parts.each do |part| %>
               <div class="data-row">
+                <span><%= part.tracking_id %></span>
                 <span><%= part.category %></span>
                 <span><%= part.name %></span>
                 <span><%= part.purpose %></span>
@@ -384,6 +385,7 @@
             <% @project.project_risks.each do |risk| %>
               <article class="risk-card">
                 <div class="card-meta">
+                  <span><%= risk.tracking_id %></span>
                   <span><%= risk.level %></span>
                   <span><%= risk.status %></span>
                 </div>
@@ -420,7 +422,7 @@
                 </div>
                 <h3><%= item.title %></h3>
                 <dl class="spec-list">
-                  <div><dt>対応要求</dt><dd><%= item.success_relation %></dd></div>
+                  <div><dt>対応要求ID</dt><dd><%= item.success_relation %></dd></div>
                   <div><dt>合格基準</dt><dd><%= item.acceptance_criteria %></dd></div>
                   <div><dt>試験方法</dt><dd><%= item.test_method %></dd></div>
                   <div><dt>結果</dt><dd><%= item.result.presence || "未記録" %></dd></div>
@@ -443,8 +445,12 @@
               <h3><%= task.title %></h3>
               <p><%= task.description %></p>
               <dl class="spec-list">
-                <div><dt>関連先</dt><dd><%= task.related_area %></dd></div>
-                <div><dt>担当</dt><dd><%= task.assignee.presence || "募集中" %></dd></div>
+                <div><dt>関連要求ID</dt><dd><%= task.related_requirement_ids.presence&.join(", ") || "未設定" %></dd></div>
+                <div><dt>関連部品ID</dt><dd><%= task.related_part_ids.presence&.join(", ") || "未設定" %></dd></div>
+                <div><dt>関連安全項目ID</dt><dd><%= task.related_safety_ids.presence&.join(", ") || "未設定" %></dd></div>
+                <div><dt>関連試験ID</dt><dd><%= task.related_test_ids.presence&.join(", ") || "未設定" %></dd></div>
+                <div><dt>担当者</dt><dd><%= task.assignee.presence || "募集中" %></dd></div>
+                <div><dt>状態</dt><dd><%= task.status %></dd></div>
               </dl>
             </article>
           <% end %>
