@@ -430,16 +430,15 @@ fried_egg.development_stages.each do |stage|
   end
 end
 
-fried_egg.project_parts.destroy_all
 [
   ["主材料", "卵", "本体", "1個", "MまたはLサイズ", "約30円", "割る前に殻の汚れを確認", "必須"],
   ["油", "サラダ油", "焦げ付き防止", "小さじ1", "米油、バター", "少量", "入れすぎると油っぽくなる", "必須"],
   ["水", "水", "蒸し焼き", "小さじ1から2", "なし", "少量", "入れすぎると水っぽくなる", "必須"],
   ["調味料", "塩こしょう", "味付け", "少量", "しょうゆ", "少量", "仕上げに使う", "任意"]
 ].each do |category, name, purpose, quantity, candidate, price, note, status|
-  fried_egg.project_parts.create!(
+  part = fried_egg.project_parts.find_or_initialize_by(name: name)
+  part.update!(
     category: category,
-    name: name,
     purpose: purpose,
     quantity: quantity,
     candidate: candidate,
