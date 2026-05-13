@@ -23,6 +23,61 @@ class Project < ApplicationRecord
     "data-transition" => "データ遷移設計"
   }.freeze
 
+  CATEGORY_SECTION_LABELS = {
+    "料理" => {
+      "requirements" => "レシピ要件",
+      "blueprints" => "レシピ",
+      "bom" => "材料",
+      "software" => "記録・共有",
+      "safety" => "衛生・アレルギー",
+      "manufacturing" => "調理工程",
+      "tests" => "再現テスト",
+      "tasks" => "試作タスク",
+      "artifacts" => "完成レシピ"
+    },
+    "政策" => {
+      "requirements" => "政策要件",
+      "blueprints" => "制度案",
+      "bom" => "予算・資源",
+      "software" => "運用設計",
+      "safety" => "リスク",
+      "manufacturing" => "実証計画",
+      "tests" => "効果検証",
+      "artifacts" => "政策パッケージ"
+    },
+    "Webサイト" => {
+      "requirements" => "要件定義",
+      "blueprints" => "画面・導線",
+      "bom" => "機能・DB",
+      "software" => "実装設計",
+      "safety" => "運用リスク",
+      "manufacturing" => "開発手順",
+      "tests" => "検証項目",
+      "artifacts" => "リリース物"
+    }
+  }.freeze
+
+  CATEGORY_DESIGN_LABELS = {
+    "料理" => {
+      "overview" => "レシピトップ",
+      "basic" => "基本レシピ",
+      "detail" => "詳細レシピ",
+      "data-transition" => "調理・保存の流れ"
+    },
+    "政策" => {
+      "overview" => "制度案トップ",
+      "basic" => "基本制度案",
+      "detail" => "詳細制度案",
+      "data-transition" => "手続き・運用の流れ"
+    },
+    "Webサイト" => {
+      "overview" => "画面・導線トップ",
+      "basic" => "基本画面設計",
+      "detail" => "詳細画面設計",
+      "data-transition" => "データ遷移設計"
+    }
+  }.freeze
+
   has_many :contributions, dependent: :destroy
   has_many :development_stages, -> { order(:position) }, dependent: :destroy
   has_many :project_parts, dependent: :destroy
@@ -81,6 +136,38 @@ class Project < ApplicationRecord
               scope.where(subsection: [nil, ""])
             end
     scope.ordered
+  end
+
+  def workspace_sections
+    WORKSPACE_SECTIONS.each_with_object({}) do |(key, _label), labels|
+      labels[key] = section_label(key)
+    end
+  end
+
+  def section_label(section)
+    CATEGORY_SECTION_LABELS.dig(category, section) || WORKSPACE_SECTIONS.fetch(section)
+  end
+
+  def design_sections
+    DESIGN_SECTIONS.each_with_object({}) do |(key, _label), labels|
+      labels[key] = design_section_label(key)
+    end
+  end
+
+  def design_section_label(section)
+    CATEGORY_DESIGN_LABELS.dig(category, section) || DESIGN_SECTIONS.fetch(section)
+  end
+
+  def food?
+    category == "料理"
+  end
+
+  def document_word
+    food? ? "レシピ" : "設計"
+  end
+
+  def detail_workbench_label
+    food? ? "細かいレシピ開発" : "細かい設計開発"
   end
 
   private

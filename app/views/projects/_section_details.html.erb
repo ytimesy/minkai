@@ -2,7 +2,7 @@
   <div class="section-heading compact-heading">
     <div>
       <p class="eyebrow">自由設計</p>
-      <h2>細かい設計開発</h2>
+      <h2><%= project.detail_workbench_label %></h2>
     </div>
     <details class="inline-create-panel">
       <summary class="button">このセクションに追加</summary>
@@ -13,7 +13,7 @@
         <div class="form-grid">
           <div class="field">
             <%= form.label :title, "タイトル" %>
-            <%= form.text_field :title, placeholder: "例: センサー配置の詳細設計" %>
+            <%= form.text_field :title, placeholder: project.food? ? "例: 黄身を半熟にする火加減" : "例: センサー配置の詳細設計" %>
           </div>
           <div class="field">
             <%= form.label :kind, "種類" %>
@@ -22,8 +22,8 @@
         </div>
 
         <div class="field">
-          <%= form.label :body, "設計内容" %>
-          <%= form.text_area :body, rows: 6, placeholder: "仕様、構成、判断理由、未決事項、次に確認することを自由に書けます。" %>
+          <%= form.label :body, project.food? ? "レシピ内容" : "設計内容" %>
+          <%= form.text_area :body, rows: 6, placeholder: project.food? ? "材料、分量、手順、火加減、味の調整、試作結果を自由に書けます。" : "仕様、構成、判断理由、未決事項、次に確認することを自由に書けます。" %>
         </div>
 
         <div class="form-grid">
@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <%= form.submit "細かい設計を保存", class: "button" %>
+        <%= form.submit project.food? ? "細かいレシピを保存" : "細かい設計を保存", class: "button" %>
       <% end %>
     </details>
   </div>
@@ -57,6 +57,6 @@
       <% end %>
     </div>
   <% else %>
-    <p class="muted-note">このページ専用の細かい設計はまだありません。</p>
+    <p class="muted-note">このページ専用の<%= project.food? ? "細かいレシピ" : "細かい設計" %>はまだありません。</p>
   <% end %>
 </section>

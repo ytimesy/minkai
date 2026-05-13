@@ -62,13 +62,13 @@
               </div>
               <div class="card-meta">
                 <span><%= stage.phase %></span>
-                <span>設計図</span>
+                <span><%= @project.food? ? "レシピ" : "設計図" %></span>
               </div>
               <h3>イメージ図</h3>
               <p><%= stage.image_description %></p>
               <h3>モデル</h3>
               <p><%= stage.model_description %></p>
-              <h3>設計図メモ</h3>
+              <h3><%= @project.food? ? "レシピメモ" : "設計図メモ" %></h3>
               <p><%= stage.blueprint_notes %></p>
             </article>
           <% end %>
@@ -77,26 +77,26 @@
 
     <% when "requirements" %>
       <section class="document-section">
-        <h2>要求仕様</h2>
+        <h2><%= @section_label %></h2>
         <div class="canvas-grid">
           <section>
-            <h3>誰の課題か</h3>
+            <h3><%= @project.food? ? "誰が作る・食べるか" : "誰の課題か" %></h3>
             <%= simple_format(@project.target_users) %>
           </section>
           <section>
-            <h3>できること</h3>
+            <h3><%= @project.food? ? "作れるもの" : "できること" %></h3>
             <%= simple_format(@project.features) %>
           </section>
           <section>
-            <h3>MVPでやらないこと</h3>
+            <h3><%= @project.food? ? "作らない範囲・注意" : "MVPでやらないこと" %></h3>
             <%= simple_format(@project.scope_limits) %>
           </section>
           <section>
-            <h3>成功条件</h3>
+            <h3><%= @project.food? ? "おいしさ・再現条件" : "成功条件" %></h3>
             <%= simple_format(@project.success_metric) %>
           </section>
           <section>
-            <h3>仕様</h3>
+            <h3><%= @project.food? ? "レシピ条件" : "仕様" %></h3>
             <%= simple_format(@project.specifications) %>
           </section>
         </div>
@@ -105,8 +105,8 @@
     <% when "blueprints" %>
       <section class="document-section">
         <h2><%= @design_section_label %></h2>
-        <nav class="document-nav" aria-label="設計ページ">
-          <% Project::DESIGN_SECTIONS.each do |key, label| %>
+        <nav class="document-nav" aria-label="<%= @project.document_word %>ページ">
+          <% @project.design_sections.each do |key, label| %>
             <% path = key == "overview" ? project_section_path(@project, section: "blueprints") : project_design_section_path(@project, section: "blueprints", design_section: key) %>
             <%= link_to label, path, class: ("active" if @design_section == key) %>
           <% end %>
@@ -116,105 +116,181 @@
         <% when "overview" %>
           <div class="blueprint-grid">
             <article class="diagram-card">
-              <h3>基本設計</h3>
+              <h3><%= @project.design_section_label("basic") %></h3>
               <div class="design-outline">
-                <span>目的・対象者</span>
-                <span>MVP範囲</span>
-                <span>システム全体構成</span>
-                <span>主要機能</span>
+                <% if @project.food? %>
+                  <span>食べる人・場面</span>
+                  <span>味の方向性</span>
+                  <span>材料の範囲</span>
+                  <span>調理時間</span>
+                <% else %>
+                  <span>目的・対象者</span>
+                  <span>MVP範囲</span>
+                  <span>システム全体構成</span>
+                  <span>主要機能</span>
+                <% end %>
               </div>
               <%= simple_format(@project.basic_design) %>
-              <%= link_to "基本設計を開く", project_design_section_path(@project, section: "blueprints", design_section: "basic") %>
+              <%= link_to "#{@project.design_section_label("basic")}を開く", project_design_section_path(@project, section: "blueprints", design_section: "basic") %>
             </article>
             <article class="diagram-card">
-              <h3>詳細設計</h3>
+              <h3><%= @project.design_section_label("detail") %></h3>
               <div class="design-outline">
-                <span>機械設計</span>
-                <span>電気設計</span>
-                <span>ソフトウェア設計</span>
-                <span>例外・運用</span>
+                <% if @project.food? %>
+                  <span>材料</span>
+                  <span>分量</span>
+                  <span>火加減</span>
+                  <span>盛り付け</span>
+                <% else %>
+                  <span>機械設計</span>
+                  <span>電気設計</span>
+                  <span>ソフトウェア設計</span>
+                  <span>例外・運用</span>
+                <% end %>
               </div>
               <%= simple_format(@project.detail_design) %>
-              <%= link_to "詳細設計を開く", project_design_section_path(@project, section: "blueprints", design_section: "detail") %>
+              <%= link_to "#{@project.design_section_label("detail")}を開く", project_design_section_path(@project, section: "blueprints", design_section: "detail") %>
             </article>
             <article class="diagram-card">
-              <h3>データ遷移設計</h3>
+              <h3><%= @project.design_section_label("data-transition") %></h3>
               <div class="state-diagram">
-                <span>投稿</span>
-                <span>仕様化</span>
-                <span>設計化</span>
-                <span>試験結果</span>
+                <% if @project.food? %>
+                  <span>材料確認</span>
+                  <span>下処理</span>
+                  <span>調理</span>
+                  <span>試食記録</span>
+                <% else %>
+                  <span>投稿</span>
+                  <span>仕様化</span>
+                  <span>設計化</span>
+                  <span>試験結果</span>
+                <% end %>
               </div>
               <%= simple_format(@project.data_transition_design) %>
-              <%= link_to "データ遷移設計を開く", project_design_section_path(@project, section: "blueprints", design_section: "data-transition") %>
+              <%= link_to "#{@project.design_section_label("data-transition")}を開く", project_design_section_path(@project, section: "blueprints", design_section: "data-transition") %>
             </article>
           </div>
         <% when "basic" %>
           <div class="blueprint-grid two-column">
             <article class="diagram-card">
-              <h3>システム全体図</h3>
-              <div class="flow-diagram">
-                <span>人の指示</span>
-                <span>音声 / テキスト / ボタン</span>
-                <span>指示解釈</span>
-                <span>行動計画</span>
-                <span>モーター制御</span>
-                <span>車輪・本体移動</span>
-              </div>
+              <h3><%= @project.food? ? "レシピ全体の流れ" : "システム全体図" %></h3>
+              <% if @project.food? %>
+                <div class="flow-diagram">
+                  <span>材料確認</span>
+                  <span>下処理</span>
+                  <span>加熱</span>
+                  <span>味見</span>
+                  <span>盛り付け</span>
+                  <span>保存・記録</span>
+                </div>
+              <% else %>
+                <div class="flow-diagram">
+                  <span>人の指示</span>
+                  <span>音声 / テキスト / ボタン</span>
+                  <span>指示解釈</span>
+                  <span>行動計画</span>
+                  <span>モーター制御</span>
+                  <span>車輪・本体移動</span>
+                </div>
+              <% end %>
               <%= simple_format(@project.system_architecture) %>
             </article>
             <article class="diagram-card">
-              <h3>基本設計メモ</h3>
+              <h3><%= @project.food? ? "基本レシピメモ" : "基本設計メモ" %></h3>
               <%= simple_format(@project.basic_design) %>
             </article>
           </div>
         <% when "detail" %>
-          <div class="blueprint-grid">
-            <article class="diagram-card">
-              <h3>機械設計</h3>
-              <div class="robot-blueprint" aria-label="小型ロボット設計図">
-                <div class="robot-body"></div>
-                <div class="robot-wheel left"></div>
-                <div class="robot-wheel right"></div>
-                <div class="robot-caster"></div>
-                <div class="robot-sensor"></div>
-                <div class="robot-stop">停止</div>
-              </div>
-              <%= simple_format(@project.mechanical_design) %>
-            </article>
-            <article class="diagram-card">
-              <h3>電気設計</h3>
-              <div class="wiring-diagram">
-                <span>バッテリー</span>
-                <span>ヒューズ</span>
-                <span>非常停止</span>
-                <span>制御PC</span>
-                <span>モータードライバ</span>
-                <span>左右モーター</span>
-                <span>距離センサー</span>
-              </div>
-              <%= simple_format(@project.electrical_design) %>
-            </article>
-            <article class="diagram-card">
-              <h3>詳細設計メモ</h3>
-              <%= simple_format(@project.detail_design) %>
-              <h3>ソフトウェア設計</h3>
-              <%= simple_format(@project.software_design) %>
-            </article>
-          </div>
+          <% if @project.food? %>
+            <div class="blueprint-grid">
+              <article class="diagram-card">
+                <h3>材料</h3>
+                <div class="design-outline">
+                  <span>主材料</span>
+                  <span>調味料</span>
+                  <span>代替材料</span>
+                  <span>アレルゲン</span>
+                </div>
+                <%= simple_format(@project.mechanical_design) %>
+              </article>
+              <article class="diagram-card">
+                <h3>分量・火加減</h3>
+                <div class="wiring-diagram">
+                  <span>分量</span>
+                  <span>温度</span>
+                  <span>時間</span>
+                  <span>器具</span>
+                  <span>保存</span>
+                  <span>注意点</span>
+                </div>
+                <%= simple_format(@project.electrical_design) %>
+              </article>
+              <article class="diagram-card">
+                <h3>詳細レシピメモ</h3>
+                <%= simple_format(@project.detail_design) %>
+                <h3>記録・共有</h3>
+                <%= simple_format(@project.software_design) %>
+              </article>
+            </div>
+          <% else %>
+            <div class="blueprint-grid">
+              <article class="diagram-card">
+                <h3>機械設計</h3>
+                <div class="robot-blueprint" aria-label="小型ロボット設計図">
+                  <div class="robot-body"></div>
+                  <div class="robot-wheel left"></div>
+                  <div class="robot-wheel right"></div>
+                  <div class="robot-caster"></div>
+                  <div class="robot-sensor"></div>
+                  <div class="robot-stop">停止</div>
+                </div>
+                <%= simple_format(@project.mechanical_design) %>
+              </article>
+              <article class="diagram-card">
+                <h3>電気設計</h3>
+                <div class="wiring-diagram">
+                  <span>バッテリー</span>
+                  <span>ヒューズ</span>
+                  <span>非常停止</span>
+                  <span>制御PC</span>
+                  <span>モータードライバ</span>
+                  <span>左右モーター</span>
+                  <span>距離センサー</span>
+                </div>
+                <%= simple_format(@project.electrical_design) %>
+              </article>
+              <article class="diagram-card">
+                <h3>詳細設計メモ</h3>
+                <%= simple_format(@project.detail_design) %>
+                <h3>ソフトウェア設計</h3>
+                <%= simple_format(@project.software_design) %>
+              </article>
+            </div>
+          <% end %>
         <% when "data-transition" %>
           <div class="blueprint-grid single-column">
             <article class="diagram-card">
-              <h3>データ・状態の遷移</h3>
+              <h3><%= @project.food? ? "調理・保存の流れ" : "データ・状態の遷移" %></h3>
               <div class="state-diagram">
-                <span>アイデア</span>
-                <span>要求仕様</span>
-                <span>設計案</span>
-                <span>部品表</span>
-                <span>リスク</span>
-                <span>試作タスク</span>
-                <span>試験結果</span>
-                <span>成果物</span>
+                <% if @project.food? %>
+                  <span>材料</span>
+                  <span>下処理</span>
+                  <span>調理</span>
+                  <span>味見</span>
+                  <span>保存</span>
+                  <span>写真記録</span>
+                  <span>再現テスト</span>
+                  <span>完成レシピ</span>
+                <% else %>
+                  <span>アイデア</span>
+                  <span>要求仕様</span>
+                  <span>設計案</span>
+                  <span>部品表</span>
+                  <span>リスク</span>
+                  <span>試作タスク</span>
+                  <span>試験結果</span>
+                  <span>成果物</span>
+                <% end %>
               </div>
               <%= simple_format(@project.data_transition_design) %>
             </article>
@@ -224,11 +300,15 @@
 
     <% when "bom" %>
       <section class="document-section">
-        <h2>部品表</h2>
+        <h2><%= @section_label %></h2>
         <% if @project.project_parts.any? %>
           <div class="data-table">
             <div class="data-head">
-              <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補</span><span>価格</span><span>状態</span>
+              <% if @project.food? %>
+                <span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>状態</span>
+              <% else %>
+                <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補</span><span>価格</span><span>状態</span>
+              <% end %>
             </div>
             <% @project.project_parts.each do |part| %>
               <div class="data-row">
@@ -248,21 +328,30 @@
 
     <% when "software" %>
       <section class="document-section">
-        <h2>ソフトウェア構成</h2>
+        <h2><%= @section_label %></h2>
         <div class="software-flow">
-          <span>入力層</span>
-          <span>理解層</span>
-          <span>判断層</span>
-          <span>制御層</span>
-          <span>安全層</span>
-          <span>ログ</span>
+          <% if @project.food? %>
+            <span>材料</span>
+            <span>分量</span>
+            <span>手順</span>
+            <span>写真</span>
+            <span>試食結果</span>
+            <span>改善メモ</span>
+          <% else %>
+            <span>入力層</span>
+            <span>理解層</span>
+            <span>判断層</span>
+            <span>制御層</span>
+            <span>安全層</span>
+            <span>ログ</span>
+          <% end %>
         </div>
         <%= simple_format(@project.software_design) %>
       </section>
 
     <% when "safety" %>
       <section class="document-section safety-section">
-        <h2>安全設計</h2>
+        <h2><%= @section_label %></h2>
         <% if @project.project_risks.any? %>
           <div class="risk-grid">
             <% @project.project_risks.each do |risk| %>
@@ -287,13 +376,13 @@
 
     <% when "manufacturing" %>
       <section class="document-section">
-        <h2>製造手順</h2>
+        <h2><%= @section_label %></h2>
         <%= simple_format(@project.manufacturing_steps) %>
       </section>
 
     <% when "tests" %>
       <section class="document-section">
-        <h2>試験項目</h2>
+        <h2><%= @section_label %></h2>
         <% if @project.project_test_items.any? %>
           <div class="test-list">
             <% @project.project_test_items.each do |item| %>
@@ -311,7 +400,7 @@
 
     <% when "tasks" %>
       <section class="document-section">
-        <h2>試作タスク</h2>
+        <h2><%= @section_label %></h2>
         <div class="task-board">
           <% @project.project_tasks.each do |task| %>
             <article>
@@ -391,7 +480,7 @@
 
     <% when "artifacts" %>
       <section class="document-section">
-        <h2>成果物</h2>
+        <h2><%= @section_label %></h2>
         <div class="artifact-grid">
           <% @project.project_artifacts.each do |artifact| %>
             <article>

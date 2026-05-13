@@ -63,9 +63,9 @@ class ProjectsController < ApplicationController
 
   def prepare_workspace(section, design_section = nil)
     @section = section
-    @section_label = Project::WORKSPACE_SECTIONS.fetch(section)
+    @section_label = @project.section_label(section)
     @design_section = section == "blueprints" ? (design_section.presence || "overview") : nil
-    @design_section_label = Project::DESIGN_SECTIONS.fetch(@design_section, nil)
+    @design_section_label = @design_section.present? ? @project.design_section_label(@design_section) : nil
     @project.ensure_development_stages
     @contribution = @project.contributions.build
     @project_section_detail = @project.project_section_details.build(section: section, subsection: @design_section)

@@ -15,8 +15,8 @@ class ProjectSectionDetail < ApplicationRecord
   scope :ordered, -> { order(Arel.sql("COALESCE(position, 999999) ASC"), created_at: :asc) }
 
   def area_label
-    base = Project::WORKSPACE_SECTIONS.fetch(section, section)
-    detail = Project::DESIGN_SECTIONS[subsection]
+    base = project.section_label(section)
+    detail = subsection.present? ? project.design_section_label(subsection) : nil
     detail.present? ? "#{base} / #{detail}" : base
   end
 

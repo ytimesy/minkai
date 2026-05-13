@@ -286,3 +286,189 @@ recipe.update!(
 
 recipe.ensure_development_stages
 recipe.save!
+
+fried_egg = Project.find_or_initialize_by(title: "失敗しにくい目玉焼き")
+fried_egg.update!(
+  category: "料理",
+  summary: "卵、油、水だけで、白身は固まり黄身は好みの固さに調整できる目玉焼きレシピを共同で検証する。",
+  problem: "目玉焼きは簡単に見えるが、白身の生焼け、黄身の固まりすぎ、焦げ付き、油はねが起きやすい。",
+  target_users: "料理初心者、朝食を短時間で作りたい人、子どもと一緒に調理する家庭。",
+  success_metric: <<~TEXT.strip,
+    ・10分以内に作れる
+    ・卵1個、油、水、塩こしょうだけで再現できる
+    ・白身が透明に残らない
+    ・黄身の半熟、固めを手順で調整できる
+    ・2人以上が同じ手順で再現できる
+  TEXT
+  status: "検証中",
+  participation_needs: "家庭での試作、火加減比較、写真記録、味の調整",
+  specifications: <<~TEXT.strip,
+    主材料は卵1個。
+    調理器具はフライパン、ふた、フライ返しを基本とする。
+    弱火から中弱火で加熱し、水を少量加えて蒸し焼きにする。
+    半熟、やや固め、しっかり固めの3段階を記録する。
+  TEXT
+  features: <<~TEXT.strip,
+    ・卵1個で作れる
+    ・半熟、固めを選べる
+    ・焦げ付きを避ける
+    ・油はねを抑える
+    ・写真で仕上がりを記録する
+  TEXT
+  intended_uses: "朝食、弁当、丼、トースト、子どもの調理練習。",
+  scope_limits: <<~TEXT.strip,
+    ・生食に近い状態では提供しない
+    ・アレルギーがある人には提供しない
+    ・大量調理は対象外
+    ・特殊な調理器具や業務用火力は対象外
+  TEXT
+  system_architecture: <<~TEXT.strip,
+    材料確認 → フライパンを温める → 油を広げる → 卵を割り入れる → 水を少量加える → ふたをして蒸し焼き → 黄身の固さ確認 → 盛り付け → 写真と試食メモ。
+  TEXT
+  basic_design: <<~TEXT.strip,
+    料理初心者でも失敗しにくいように、火加減、水の量、ふたをする時間を中心にレシピを作る。
+    目標は、白身を確実に固めつつ、黄身の固さを好みで調整できること。
+  TEXT
+  detail_design: <<~TEXT.strip,
+    半熟: 水小さじ1、ふたをして中弱火で1分30秒から2分。
+    やや固め: 水小さじ1、ふたをして2分30秒から3分。
+    固め: 水小さじ2、ふたをして4分前後。
+    フライパンの材質、卵の温度、火力で結果が変わるため、写真と時間を記録する。
+  TEXT
+  data_transition_design: <<~TEXT.strip,
+    卵の状態、火加減、加熱時間、水の量、仕上がり写真、試食メモを記録する。
+    複数人の試作結果から、半熟、やや固め、固めの標準手順へ反映する。
+  TEXT
+  mechanical_design: <<~TEXT.strip,
+    主材料: 卵1個。
+    調味料: 塩、こしょう、しょうゆなど。
+    油: サラダ油、米油、バターなどを比較対象にする。
+    代替材料: 油なし調理、バター風味、両面焼きも試作候補。
+  TEXT
+  electrical_design: <<~TEXT.strip,
+    分量: 卵1個、油小さじ1、水小さじ1から2。
+    器具: フライパン、ふた、フライ返し。
+    火加減: 弱火から中弱火。
+    注意点: 強火にすると白身の縁が焦げやすく、油はねが増える。
+  TEXT
+  software_design: <<~TEXT.strip,
+    記録項目は、卵の大きさ、冷蔵庫から出してすぐか、油の種類、火加減、加熱時間、水の量、黄身の固さ、白身の状態、写真。
+  TEXT
+  safety_design: <<~TEXT.strip,
+    卵アレルギーに注意する。
+    加熱不足のまま提供しない。
+    油はね、フライパン、蒸気によるやけどに注意する。
+    子どもと作る場合は大人が火とフライパンを管理する。
+  TEXT
+  manufacturing_steps: <<~TEXT.strip,
+    1. 卵、油、水、ふた、皿を用意する
+    2. フライパンを中弱火で温める
+    3. 油を入れて薄く広げる
+    4. 卵を低い位置から割り入れる
+    5. 白身の縁が少し固まったら水を小さじ1入れる
+    6. ふたをして好みの固さまで蒸し焼きにする
+    7. 塩こしょうを振り、皿に移す
+    8. 写真、時間、黄身の固さを記録する
+  TEXT
+  test_plan: <<~TEXT.strip,
+    □ 10分以内に作れる
+    □ 白身が透明に残らない
+    □ 黄身を半熟にできる
+    □ 黄身を固めにできる
+    □ 焦げ付きが少ない
+    □ 2人以上が同じ手順で再現できる
+  TEXT
+  development_log: <<~TEXT.strip,
+    2026-05-14 目玉焼きレシピの初期案を作成
+    2026-05-14 半熟、やや固め、固めの3段階を検証対象に設定
+  TEXT
+  bill_of_materials: <<~TEXT.strip,
+    卵 / 主材料 / 1個 / MまたはLサイズ
+    油 / 焦げ付き防止 / 小さじ1 / サラダ油、米油、バター
+    水 / 蒸し焼き / 小さじ1から2 / 黄身の固さ調整
+    塩こしょう / 味付け / 少量 / しょうゆも可
+  TEXT
+  next_prototype: "同じフライパンで半熟、やや固め、固めを1回ずつ作り、加熱時間と写真を比較する。"
+)
+
+fried_egg.ensure_development_stages
+fried_egg.development_stages.each do |stage|
+  case stage.phase
+  when "初期"
+    stage.update!(
+      image_description: "卵、油、水、ふたの準備と、火加減の仮説を整理する。",
+      model_description: "半熟、やや固め、固めの3パターンを紙面で比較する。",
+      blueprint_notes: "材料、分量、火加減、加熱時間をレシピメモとして固定する。"
+    )
+  when "中期"
+    stage.update!(
+      image_description: "実際に焼き、黄身の固さ、白身の状態、焦げ付きを写真で記録する。",
+      model_description: "フライパン、油、水、ふた時間を変えた試作レシピ。",
+      blueprint_notes: "水の量とふた時間ごとの仕上がりを表にする。"
+    )
+  when "後期"
+    stage.update!(
+      image_description: "複数人が同じ手順で作り、再現性と味を確認する。",
+      model_description: "半熟、やや固め、固めの標準手順を検証したレシピ。",
+      blueprint_notes: "失敗例、焦げ付き、加熱不足、油はねの対策を追加する。"
+    )
+  when "完成"
+    stage.update!(
+      image_description: "材料、手順、写真、再現テスト結果を公開できる状態。",
+      model_description: "初心者でも10分以内に作れる完成レシピ。",
+      blueprint_notes: "完成レシピ、注意点、アレンジ、保存しない条件をまとめる。"
+    )
+  end
+end
+
+fried_egg.project_parts.destroy_all
+[
+  ["主材料", "卵", "本体", "1個", "MまたはLサイズ", "約30円", "割る前に殻の汚れを確認", "必須"],
+  ["油", "サラダ油", "焦げ付き防止", "小さじ1", "米油、バター", "少量", "入れすぎると油っぽくなる", "必須"],
+  ["水", "水", "蒸し焼き", "小さじ1から2", "なし", "少量", "入れすぎると水っぽくなる", "必須"],
+  ["調味料", "塩こしょう", "味付け", "少量", "しょうゆ", "少量", "仕上げに使う", "任意"]
+].each do |category, name, purpose, quantity, candidate, price, note, status|
+  fried_egg.project_parts.create!(
+    category: category,
+    name: name,
+    purpose: purpose,
+    quantity: quantity,
+    candidate: candidate,
+    estimated_price: price,
+    note: note,
+    status: status
+  )
+end
+
+fried_egg.project_test_items.destroy_all
+[
+  ["半熟テスト", "黄身を半熟にできる", "水小さじ1、ふたをして2分以内で焼く", "白身は固まり、黄身が流れる", "未実施"],
+  ["固めテスト", "黄身を固めにできる", "水小さじ2、ふたをして4分前後焼く", "黄身が流れず、焦げ付きが少ない", "未実施"],
+  ["再現テスト", "2人以上が同じ手順で再現できる", "同じ手順で別の人が調理する", "写真と試食メモが近い", "未実施"]
+].each do |title, relation, method, criteria, status|
+  fried_egg.project_test_items.create!(
+    title: title,
+    success_relation: relation,
+    test_method: method,
+    acceptance_criteria: criteria,
+    status: status
+  )
+end
+
+fried_egg.project_roles.destroy_all
+[
+  ["試作", "半熟、やや固め、固めを作って写真と時間を記録する。"],
+  ["味の調整", "塩、こしょう、しょうゆ、バターなどの違いを比較する。"],
+  ["安全確認", "油はね、やけど、加熱不足、卵アレルギーの注意点を整理する。"]
+].each do |name, description|
+  fried_egg.project_roles.create!(name: name, description: description, status: "募集中")
+end
+
+fried_egg.project_artifacts.destroy_all
+[
+  ["基本レシピ", "レシピ", "半熟、やや固め、固めの標準手順。", "作成中"],
+  ["材料表", "材料", "卵、油、水、調味料の分量表。", "作成中"],
+  ["再現テスト結果", "検証", "複数人の試作写真と時間の記録。", "未着手"]
+].each do |title, kind, notes, status|
+  fried_egg.project_artifacts.create!(title: title, kind: kind, notes: notes, status: status)
+end

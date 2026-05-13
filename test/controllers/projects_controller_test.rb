@@ -33,6 +33,20 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: project_section_details(:one).title
   end
 
+  test "food project uses recipe labels" do
+    project = projects(:two)
+
+    get project_section_url(project, section: "bom")
+    assert_response :success
+    assert_select "h2", text: "材料"
+    assert_select "h2", text: "細かいレシピ開発"
+
+    get project_design_section_url(project, section: "blueprints", design_section: "detail")
+    assert_response :success
+    assert_select "h2", text: "詳細レシピ"
+    assert_select "h3", text: "材料"
+  end
+
   test "should get design subsections" do
     project = projects(:one)
 
