@@ -10,6 +10,10 @@
 - プロジェクトごとの参加メモ投稿
 - `ops.com` / `www.ops.com` のproductionホスト許可
 
+## 公開URL
+
+https://minkai.formflow-ops.com
+
 ## 開発
 
 ```sh
