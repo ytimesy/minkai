@@ -39,7 +39,9 @@
 body {
   margin: 0;
   background:
-    linear-gradient(rgba(21, 13, 9, 0.10), rgba(21, 13, 9, 0.26)),
+    linear-gradient(90deg, rgba(13, 8, 6, 0.70) 0%, rgba(13, 8, 6, 0.46) 42%, rgba(13, 8, 6, 0.30) 72%, rgba(13, 8, 6, 0.58) 100%),
+    linear-gradient(180deg, rgba(21, 13, 9, 0.16), rgba(21, 13, 9, 0.44)),
+    url("/images/elf-hero.jpg") center center / cover fixed,
     url("/forge-background.svg") center center / cover fixed,
     linear-gradient(90deg, rgba(91, 70, 45, 0.22) 1px, transparent 1px),
     linear-gradient(rgba(91, 70, 45, 0.18) 1px, transparent 1px),
@@ -47,7 +49,7 @@ body {
     linear-gradient(225deg, rgba(143, 63, 29, 0.11) 0 16%, transparent 16% 100%),
     linear-gradient(#f5ead6, #e7d2ad 58%, #d9bd91),
     var(--paper);
-  background-size: auto, cover, 34px 34px, 34px 34px, auto, auto, auto, auto;
+  background-size: auto, auto, cover, cover, 34px 34px, 34px 34px, auto, auto, auto, auto;
   color: var(--ink);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.6;
@@ -64,8 +66,8 @@ body::after {
 
 body::before {
   background:
-    linear-gradient(90deg, rgba(18, 13, 10, 0.88), rgba(61, 45, 34, 0.78) 7%, transparent 15% 85%, rgba(61, 45, 34, 0.78) 93%, rgba(18, 13, 10, 0.88)),
-    linear-gradient(180deg, rgba(18, 13, 10, 0.88), rgba(72, 51, 35, 0.58) 8%, transparent 18% 82%, rgba(34, 24, 18, 0.64) 94%, rgba(18, 13, 10, 0.88)),
+    linear-gradient(90deg, rgba(18, 13, 10, 0.86), rgba(61, 45, 34, 0.68) 7%, transparent 16% 84%, rgba(61, 45, 34, 0.68) 93%, rgba(18, 13, 10, 0.86)),
+    linear-gradient(180deg, rgba(18, 13, 10, 0.82), rgba(72, 51, 35, 0.42) 8%, transparent 20% 82%, rgba(34, 24, 18, 0.56) 94%, rgba(18, 13, 10, 0.86)),
     linear-gradient(90deg, rgba(255, 220, 156, 0.11) 1px, transparent 1px),
     linear-gradient(rgba(255, 220, 156, 0.08) 1px, transparent 1px);
   background-size: auto, auto, 72px 42px, 72px 42px;
@@ -230,9 +232,7 @@ main > * {
 .hero {
   background:
     linear-gradient(90deg, rgba(14, 9, 7, 0.78) 0%, rgba(14, 9, 7, 0.58) 38%, rgba(14, 9, 7, 0.24) 72%, rgba(14, 9, 7, 0.42) 100%),
-    linear-gradient(180deg, rgba(29, 21, 17, 0.28), rgba(29, 21, 17, 0.58)),
-    url("/images/elf-hero.jpg") center center / cover no-repeat,
-    url("/forge-background.svg") center center / cover no-repeat;
+    linear-gradient(180deg, rgba(29, 21, 17, 0.18), rgba(29, 21, 17, 0.46));
   border: 10px solid rgba(64, 45, 33, 0.78);
   border-radius: 16px;
   box-shadow:
@@ -1407,6 +1407,10 @@ textarea {
       inset 0 22px 34px rgba(10, 7, 5, 0.44);
   }
 
+  body {
+    background-position: center, center, 58% center, center, 0 0, 0 0, center, center, center, center;
+  }
+
   main {
     padding-left: clamp(18px, 5vw, 28px);
     padding-right: clamp(18px, 5vw, 28px);
@@ -1463,7 +1467,6 @@ textarea {
   }
 
   .hero {
-    background-position: 58% center, center, 58% center, center;
     min-height: auto;
     padding-top: 48px;
   }
