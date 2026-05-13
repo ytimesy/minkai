@@ -24,6 +24,18 @@ class Project < ApplicationRecord
     self.participation_needs = "設計レビュー・調査・試作" if participation_needs.blank?
     self.specifications = "材料・寸法・性能・予算・安全条件を整理する" if specifications.blank?
     self.features = "利用者が最初に必要とする機能から優先順位を決める" if features.blank?
+    self.intended_uses = "想定用途を整理する" if intended_uses.blank?
+    self.scope_limits = "MVPでやらないことを明記する" if scope_limits.blank?
+    self.system_architecture = "入力、判断、制御、安全停止の流れを整理する" if system_architecture.blank?
+    self.mechanical_design = "外形、駆動方式、重心、保守口を整理する" if mechanical_design.blank?
+    self.electrical_design = "低電圧の試作構成、電源、非常停止、センサー配線を整理する" if electrical_design.blank?
+    self.software_design = "入力層、理解層、判断層、制御層、安全層を整理する" if software_design.blank?
+    self.safety_design = "速度制限、非常停止、障害物停止、禁止用途を整理する" if safety_design.blank?
+    self.manufacturing_steps = "試作手順を段階的に整理する" if manufacturing_steps.blank?
+    self.test_plan = "成功条件を試験項目へ変換する" if test_plan.blank?
+    self.development_log = "開発履歴を時系列で記録する" if development_log.blank?
+    self.bill_of_materials = "カテゴリ、部品名、用途、数量、候補、注意点を整理する" if bill_of_materials.blank?
+    self.next_prototype = "次に作る試作と確認項目を整理する" if next_prototype.blank?
   end
 
   def build_default_development_stages

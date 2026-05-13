@@ -64,6 +64,77 @@
 
   <section class="stage-form-section">
     <div>
+      <p class="eyebrow">Development document</p>
+      <h2>開発ドキュメント</h2>
+    </div>
+
+    <div class="field">
+      <%= form.label :intended_uses, "想定用途" %>
+      <%= form.text_area :intended_uses, rows: 4, placeholder: "小型搬送、教材、案内補助、基礎研究など。" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :scope_limits, "MVPでやらないこと・制約条件" %>
+      <%= form.text_area :scope_limits, rows: 5, placeholder: "人を乗せない、屋外公道を走らない、危険物を扱わない、完全自律判断をしない等。" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :system_architecture, "システム全体図" %>
+      <%= form.text_area :system_architecture, rows: 5, placeholder: "入力、指示解釈、行動計画、制御、安全停止の流れ。" %>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <%= form.label :mechanical_design, "機械設計" %>
+        <%= form.text_area :mechanical_design, rows: 6, placeholder: "本体サイズ、車輪構成、重心、センサー位置、非常停止ボタン位置。" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :electrical_design, "電気設計" %>
+        <%= form.text_area :electrical_design, rows: 6, placeholder: "制御コンピュータ、モータードライバ、バッテリー、ヒューズ、距離センサー。" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= form.label :bill_of_materials, "部品表" %>
+      <%= form.text_area :bill_of_materials, rows: 7, placeholder: "カテゴリ / 部品名 / 用途 / 数量 / 候補品 / 代替案 / 注意点。" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :software_design, "ソフトウェア構成" %>
+      <%= form.text_area :software_design, rows: 6, placeholder: "音声・テキスト・ボタン入力、コマンド変換、走行制御、安全停止、ログ記録。" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :safety_design, "安全設計" %>
+      <%= form.text_area :safety_design, rows: 7, placeholder: "危険源、想定リスク、対策、試験方法、残る課題。" %>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <%= form.label :manufacturing_steps, "製造手順" %>
+        <%= form.text_area :manufacturing_steps, rows: 7, placeholder: "フレーム、車輪、電源、制御、センサー、非常停止、走行テスト。" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :test_plan, "試験項目" %>
+        <%= form.text_area :test_plan, rows: 7, placeholder: "前進、停止、旋回、障害物停止、非常停止、連続動作、通信切断停止。" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= form.label :development_log, "開発ログ" %>
+      <%= form.text_area :development_log, rows: 5, placeholder: "日付ごとの意思決定、部品候補、試験結果、課題。" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :next_prototype, "次の試作" %>
+      <%= form.text_area :next_prototype, rows: 4, placeholder: "次に作るモデル、確認する動作、必要な協力。" %>
+    </div>
+  </section>
+
+  <section class="stage-form-section">
+    <div>
       <p class="eyebrow">Development stages</p>
       <h2>製造・開発の4段階</h2>
     </div>

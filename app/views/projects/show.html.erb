@@ -10,6 +10,73 @@
     <h1><%= @project.title %></h1>
     <p class="lead compact"><%= @project.summary %></p>
 
+    <div class="document-nav">
+      <a href="#overview">概要</a>
+      <a href="#requirements">要求仕様</a>
+      <a href="#blueprints">設計図</a>
+      <a href="#bom">部品表</a>
+      <a href="#software">ソフトウェア</a>
+      <a href="#safety">安全設計</a>
+      <a href="#manufacturing">製造手順</a>
+      <a href="#tests">試験項目</a>
+      <a href="#log">開発ログ</a>
+      <a href="#join">参加募集</a>
+    </div>
+
+    <div class="priority-grid">
+      <a href="#requirements">要求仕様</a>
+      <a href="#blueprints">設計図</a>
+      <a href="#bom">部品表</a>
+      <a href="#safety">安全設計</a>
+      <a href="#tests">試験項目</a>
+    </div>
+
+    <section class="document-section" id="overview">
+      <p class="eyebrow">Overview</p>
+      <h2>プロジェクト概要</h2>
+      <div class="canvas-grid">
+        <section>
+          <h3>目的</h3>
+          <%= simple_format(@project.problem) %>
+        </section>
+        <section>
+          <h3>想定用途</h3>
+          <%= simple_format(@project.intended_uses) %>
+        </section>
+        <section>
+          <h3>現在の段階</h3>
+          <p><%= @project.status %></p>
+        </section>
+        <section>
+          <h3>次の試作</h3>
+          <%= simple_format(@project.next_prototype) %>
+        </section>
+      </div>
+    </section>
+
+    <section class="document-section" id="requirements">
+      <p class="eyebrow">Requirements</p>
+      <h2>要求仕様</h2>
+      <div class="canvas-grid">
+        <section>
+          <h3>誰の課題か</h3>
+          <%= simple_format(@project.target_users) %>
+        </section>
+        <section>
+          <h3>できること</h3>
+          <%= simple_format(@project.features) %>
+        </section>
+        <section>
+          <h3>やらないこと</h3>
+          <%= simple_format(@project.scope_limits) %>
+        </section>
+        <section>
+          <h3>成功条件</h3>
+          <%= simple_format(@project.success_metric) %>
+        </section>
+      </div>
+    </section>
+
     <div class="canvas-grid">
       <section>
         <h2>解きたい課題</h2>
@@ -37,7 +104,7 @@
       </section>
     </div>
 
-    <section class="stage-roadmap">
+    <section class="stage-roadmap document-section">
       <div class="section-heading compact-heading">
         <div>
           <p class="eyebrow">Build roadmap</p>
@@ -68,10 +135,117 @@
         <% end %>
       </div>
     </section>
+
+    <section class="document-section" id="blueprints">
+      <p class="eyebrow">Blueprints</p>
+      <h2>設計図</h2>
+      <div class="blueprint-grid">
+        <article class="diagram-card">
+          <h3>システム全体図</h3>
+          <div class="flow-diagram">
+            <span>人の指示</span>
+            <span>音声 / テキスト / ボタン</span>
+            <span>指示解釈</span>
+            <span>行動計画</span>
+            <span>モーター制御</span>
+            <span>車輪・本体移動</span>
+          </div>
+          <%= simple_format(@project.system_architecture) %>
+        </article>
+        <article class="diagram-card">
+          <h3>二輪差動の外形案</h3>
+          <div class="robot-blueprint" aria-label="小型ロボット設計図">
+            <div class="robot-body"></div>
+            <div class="robot-wheel left"></div>
+            <div class="robot-wheel right"></div>
+            <div class="robot-caster"></div>
+            <div class="robot-sensor"></div>
+            <div class="robot-stop">停止</div>
+          </div>
+          <%= simple_format(@project.mechanical_design) %>
+        </article>
+        <article class="diagram-card">
+          <h3>配線ブロック図</h3>
+          <div class="wiring-diagram">
+            <span>バッテリー</span>
+            <span>ヒューズ</span>
+            <span>非常停止</span>
+            <span>制御PC</span>
+            <span>モータードライバ</span>
+            <span>左右モーター</span>
+            <span>距離センサー</span>
+          </div>
+          <%= simple_format(@project.electrical_design) %>
+        </article>
+      </div>
+    </section>
+
+    <section class="document-section" id="bom">
+      <p class="eyebrow">Bill of materials</p>
+      <h2>部品表</h2>
+      <%= simple_format(@project.bill_of_materials) %>
+    </section>
+
+    <section class="document-section" id="software">
+      <p class="eyebrow">Software</p>
+      <h2>ソフトウェア構成</h2>
+      <div class="software-flow">
+        <span>入力層</span>
+        <span>理解層</span>
+        <span>判断層</span>
+        <span>制御層</span>
+        <span>安全層</span>
+        <span>ログ</span>
+      </div>
+      <%= simple_format(@project.software_design) %>
+    </section>
+
+    <section class="document-section safety-section" id="safety">
+      <p class="eyebrow">Safety first</p>
+      <h2>安全設計</h2>
+      <%= simple_format(@project.safety_design) %>
+    </section>
+
+    <section class="document-section" id="manufacturing">
+      <p class="eyebrow">Manufacturing</p>
+      <h2>製造手順</h2>
+      <%= simple_format(@project.manufacturing_steps) %>
+    </section>
+
+    <section class="document-section" id="tests">
+      <p class="eyebrow">Verification</p>
+      <h2>試験項目</h2>
+      <%= simple_format(@project.test_plan) %>
+    </section>
+
+    <section class="document-section" id="log">
+      <p class="eyebrow">Development log</p>
+      <h2>開発ログ</h2>
+      <%= simple_format(@project.development_log) %>
+    </section>
   </section>
 
-  <aside class="contribution-panel">
-    <h2>参加メモ</h2>
+  <aside class="contribution-panel" id="join">
+    <h2>参加募集</h2>
+    <div class="role-grid">
+      <article>
+        <h3>機械設計</h3>
+        <p>フレーム、車輪配置、重心、カバー、保守口。</p>
+      </article>
+      <article>
+        <h3>電気設計</h3>
+        <p>電源構成、非常停止、センサー配線、低電圧試作。</p>
+      </article>
+      <article>
+        <h3>ソフトウェア</h3>
+        <p>音声コマンド、走行制御、ログ保存、安全停止。</p>
+      </article>
+      <article>
+        <h3>安全レビュー</h3>
+        <p>危険源、停止条件、試験項目、運用制約。</p>
+      </article>
+    </div>
+    <p><%= @project.participation_needs %></p>
 
     <%= form_with model: [@project, @contribution], class: "contribution-form" do |form| %>
       <% if @contribution.errors.any? %>

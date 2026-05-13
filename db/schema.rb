@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_13_162806) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_13_164222) do
   create_table "contributions", force: :cascade do |t|
     t.integer "project_id", null: false
     t.string "name"
@@ -47,6 +47,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_13_162806) do
     t.datetime "updated_at", null: false
     t.text "specifications"
     t.text "features"
+    t.text "intended_uses"
+    t.text "scope_limits"
+    t.text "system_architecture"
+    t.text "mechanical_design"
+    t.text "electrical_design"
+    t.text "software_design"
+    t.text "safety_design"
+    t.text "manufacturing_steps"
+    t.text "test_plan"
+    t.text "development_log"
+    t.text "bill_of_materials"
+    t.text "next_prototype"
   end
 
   add_foreign_key "contributions", "projects"

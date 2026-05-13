@@ -55,6 +55,18 @@ class ProjectsController < ApplicationController
       :participation_needs,
       :specifications,
       :features,
+      :intended_uses,
+      :scope_limits,
+      :system_architecture,
+      :mechanical_design,
+      :electrical_design,
+      :software_design,
+      :safety_design,
+      :manufacturing_steps,
+      :test_plan,
+      :development_log,
+      :bill_of_materials,
+      :next_prototype,
       development_stages_attributes: %i[
         id
         phase

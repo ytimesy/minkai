@@ -58,6 +58,18 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
         participation_needs: project.participation_needs,
         specifications: "耐荷重30kgに更新",
         features: "遠隔停止を追加",
+        intended_uses: "教材と施設内案内",
+        scope_limits: "人を乗せない",
+        system_architecture: "入力から安全停止まで",
+        mechanical_design: "二輪差動",
+        electrical_design: "低電圧構成",
+        software_design: "Python制御",
+        safety_design: "非常停止と障害物停止",
+        manufacturing_steps: "フレームを組む",
+        test_plan: "停止試験",
+        development_log: "仕様更新",
+        bill_of_materials: "モーター / 駆動 / 2",
+        next_prototype: "小型台車",
         development_stages_attributes: {
           "0" => {
             id: development_stages(:one).id,
@@ -74,6 +86,8 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to project_url(project)
     project.reload
     assert_equal "耐荷重30kgに更新", project.specifications
+    assert_equal "非常停止と障害物停止", project.safety_design
+    assert_equal "モーター / 駆動 / 2", project.bill_of_materials
     assert_equal "更新した構想図", development_stages(:one).reload.image_description
   end
 end
