@@ -167,12 +167,12 @@ end
 
 robot.project_parts.destroy_all
 [
-  ["駆動", "左右モーター", "移動用", "2", "未定", "未定", "複数の低速ギヤードモーター", "積載に必要なトルクを確認", "調査中"],
-  ["制御", "制御用コンピュータ", "指示解釈と走行制御", "1", "Raspberry Pi級または小型PC", "未定", "マイコン単体制御", "放熱と電源容量に注意", "候補調査"],
-  ["安全", "非常停止ボタン", "緊急停止", "1", "押しやすい大型ボタン", "未定", "電源遮断スイッチ併用", "上面中央に配置", "必須"],
-  ["検知", "距離センサー", "障害物検知", "2以上", "ToFまたは超音波", "未定", "バンパースイッチ併用", "誤検知と死角を試験", "調査中"],
-  ["電源", "低電圧バッテリー", "走行と制御の電源", "1", "保護回路付き", "未定", "外部ACアダプタ試験", "ヒューズと電源スイッチを確認", "未検証"]
-].each do |category, name, purpose, quantity, candidate, price, alternative, note, status|
+  ["駆動", "左右モーター", "移動用", "2", "未定", "未定", "複数の低速ギヤードモーター", "積載に必要なトルクを確認", "researching", "REQ-006", "TEST-006", "未決定", "調査中"],
+  ["制御", "制御用コンピュータ", "指示解釈と走行制御", "1", "Raspberry Pi級または小型PC", "未定", "マイコン単体制御", "放熱と電源容量に注意", "buy", "REQ-001, REQ-002", "TEST-001, TEST-002", "候補あり", "候補調査"],
+  ["安全", "非常停止ボタン", "緊急停止", "1", "押しやすい大型ボタン", "未定", "電源遮断スイッチ併用", "上面中央に配置", "buy", "REQ-004", "TEST-004", "安全レビュー必須", "必須"],
+  ["検知", "距離センサー", "障害物検知", "2以上", "ToFまたは超音波", "未定", "バンパースイッチ併用", "誤検知と死角を試験", "researching", "REQ-003", "TEST-003", "未決定", "調査中"],
+  ["電源", "低電圧バッテリー", "走行と制御の電源", "1", "保護回路付き", "未定", "外部ACアダプタ試験", "ヒューズと電源スイッチを確認", "buy", "REQ-006", "TEST-006", "安全レビュー必須", "未検証"]
+].each do |category, name, purpose, quantity, candidate, price, alternative, note, procurement_policy, requirement_ids, test_ids, development_status, status|
   robot.project_parts.create!(
     category: category,
     name: name,
@@ -182,6 +182,10 @@ robot.project_parts.destroy_all
     estimated_price: price,
     alternative: alternative,
     note: note,
+    procurement_policy: procurement_policy,
+    requirement_ids: requirement_ids,
+    test_ids: test_ids,
+    development_status: development_status,
     status: status
   )
 end
@@ -226,11 +230,11 @@ end
 
 robot.project_tasks.destroy_all
 [
-  ["モーター候補を比較する", "REQ-006 / PART-001 / SAFE-002 / TEST-006", "募集中", "担当者募集中", "必要トルク、価格、入手性、制御しやすさを比較する。"],
-  ["非常停止ボタン位置をレビューする", "REQ-004 / PART-003 / SAFE-001 / TEST-004", "募集中", "レビュー待ち", "上面中央に配置する案の押しやすさと配線を確認する。"],
-  ["障害物停止テスト手順を作成する", "REQ-003 / PART-004 / SAFE-001 / TEST-003", "募集中", "未着手", "停止距離、速度、センサー位置の記録方法を決める。"],
-  ["通信切断時の停止条件を決める", "REQ-005 / PART-002 / SAFE-003 / TEST-005", "募集中", "未着手", "通信断から停止までの許容時間とログ記録を決める。"],
-  ["Python制御とROS 2構成を比較する", "REQ-001 / PART-002 / SAFE-003 / TEST-001", "募集中", "未着手", "初期MVPに適した制御構成を比較表にする。"]
+  ["モーター候補を比較する", "REQ-006 / BOM-001 / SAFE-002 / TEST-006", "募集中", "担当者募集中", "必要トルク、価格、入手性、制御しやすさを比較する。"],
+  ["非常停止ボタン位置をレビューする", "REQ-004 / BOM-003 / SAFE-001 / TEST-004", "募集中", "レビュー待ち", "上面中央に配置する案の押しやすさと配線を確認する。"],
+  ["障害物停止テスト手順を作成する", "REQ-003 / BOM-004 / SAFE-001 / TEST-003", "募集中", "未着手", "停止距離、速度、センサー位置の記録方法を決める。"],
+  ["通信切断時の停止条件を決める", "REQ-005 / BOM-002 / SAFE-003 / TEST-005", "募集中", "未着手", "通信断から停止までの許容時間とログ記録を決める。"],
+  ["Python制御とROS 2構成を比較する", "REQ-001 / BOM-002 / SAFE-003 / TEST-001", "募集中", "未着手", "初期MVPに適した制御構成を比較表にする。"]
 ].each do |title, related_area, assignee, status, description|
   robot.project_tasks.create!(
     title: title,

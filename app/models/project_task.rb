@@ -10,7 +10,7 @@ class ProjectTask < ApplicationRecord
   end
 
   def related_part_ids
-    related_area.to_s.scan(/PART-\d{3}/).uniq
+    related_area.to_s.scan(/(?:BOM|PART)-\d{3}/).uniq
   end
 
   def related_safety_ids

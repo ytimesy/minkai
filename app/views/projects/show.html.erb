@@ -8,6 +8,21 @@
     <h1><%= @project.title %></h1>
     <p class="lead compact"><%= @project.summary %></p>
 
+    <% if @project.component_project? && @project.parent_project.present? %>
+      <section class="component-parent-banner">
+        <div>
+          <p class="eyebrow">Parent project</p>
+          <h2><%= link_to @project.parent_project.title, @project.parent_project %></h2>
+          <% if @project.source_bom_item.present? %>
+            <p><%= @project.source_bom_item.tracking_id %> <%= @project.source_bom_item.name %> から作成された子開発ページです。</p>
+          <% end %>
+        </div>
+        <% if @project.safety_review_required? %>
+          <strong>安全レビュー必須</strong>
+        <% end %>
+      </section>
+    <% end %>
+
     <% case @section %>
     <% when "overview" %>
       <section class="maturity-panel">
@@ -329,9 +344,9 @@
           <div class="data-table">
             <div class="data-head">
               <% if @project.food? %>
-                <span>ID</span><span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>代替案</span><span>注意点</span><span>状態</span>
+                <span>ID</span><span>分類</span><span>材料名</span><span>用途</span><span>分量</span><span>候補</span><span>価格</span><span>代替案</span><span>注意点</span><span>調達方針</span><span>要求ID</span><span>関連試験ID</span><span>子開発ページ</span><span>開発状態</span><span>操作</span>
               <% else %>
-                <span>ID</span><span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補品</span><span>概算価格</span><span>代替案</span><span>注意点</span><span>状態</span>
+                <span>ID</span><span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補品</span><span>概算価格</span><span>代替案</span><span>注意点</span><span>調達方針</span><span>要求ID</span><span>関連試験ID</span><span>子開発ページ</span><span>開発状態</span><span>操作</span>
               <% end %>
             </div>
             <% @project.project_parts.each do |part| %>
@@ -345,7 +360,26 @@
                 <span><%= part.estimated_price %></span>
                 <span><%= part.alternative %></span>
                 <span><%= part.note %></span>
-                <span><%= part.status %></span>
+                <span><%= part.procurement_policy_label %></span>
+                <span><%= part.requirement_ids.presence || "未設定" %></span>
+                <span><%= part.test_ids.presence || "未設定" %></span>
+                <span>
+                  <% if part.child_project.present? %>
+                    <%= link_to part.child_project.title, part.child_project %>
+                  <% else %>
+                    未作成
+                  <% end %>
+                </span>
+                <span><%= part.development_status %> / <%= part.status %></span>
+                <span>
+                  <% if part.child_project.present? %>
+                    <%= link_to "子開発ページを見る", part.child_project, class: "button button-small" %>
+                  <% elsif part.developable? %>
+                    <%= link_to "この部品を開発する", new_component_project_part_path(@project, part), class: "button button-small" %>
+                  <% else %>
+                    <span class="muted-note">詳細を見る</span>
+                  <% end %>
+                </span>
               </div>
             <% end %>
           </div>
@@ -526,6 +560,39 @@
     <% when "artifacts" %>
       <section class="document-section">
         <h2><%= @section_label %></h2>
+        <% if @project.component_project? && @project.parent_project.present? && @project.source_bom_item.present? %>
+          <section class="parent-sync-panel">
+            <p class="eyebrow">Parent BOM sync</p>
+            <h3>親プロジェクトへ反映</h3>
+            <p><%= @project.parent_project.title %> の <%= @project.source_bom_item.tracking_id %> <%= @project.source_bom_item.name %> を更新します。</p>
+            <%= form_with model: @project.source_bom_item,
+              url: sync_from_child_project_part_path(@project.parent_project, @project.source_bom_item),
+              method: :post,
+              class: "section-detail-form static-form" do |form| %>
+              <div class="form-grid">
+                <div class="field">
+                  <%= form.label :procurement_policy, "調達方針" %>
+                  <%= form.select :procurement_policy, ProjectPart::PROCUREMENT_POLICIES.map { |value, label| [label, value] } %>
+                </div>
+                <div class="field">
+                  <%= form.label :estimated_price, "概算価格" %>
+                  <%= form.text_field :estimated_price, placeholder: "例: 1,200円" %>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="field">
+                  <%= form.label :status, "状態" %>
+                  <%= form.text_field :status, placeholder: "例: 候補確定" %>
+                </div>
+                <div class="field">
+                  <%= form.label :note, "注意点" %>
+                  <%= form.text_field :note, placeholder: "例: 死角の追加評価が必要" %>
+                </div>
+              </div>
+              <%= form.submit "親BOMへ反映", class: "button" %>
+            <% end %>
+          </section>
+        <% end %>
         <div class="artifact-grid">
           <% @project.project_artifacts.each do |artifact| %>
             <article>

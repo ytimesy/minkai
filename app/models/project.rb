@@ -1,6 +1,7 @@
 class Project < ApplicationRecord
   CATEGORIES = %w[機械 ロボット 政策 Webサイト 料理 研究 その他].freeze
   STATUSES = %w[構想 設計中 試作中 検証中 公開中].freeze
+  PROJECT_TYPES = %w[main_project component_project module_project test_project].freeze
   WORKSPACE_SECTIONS = {
     "overview" => "概要",
     "requirements" => "要求仕様",
@@ -87,9 +88,13 @@ class Project < ApplicationRecord
   has_many :project_artifacts, dependent: :destroy
   has_many :project_roles, dependent: :destroy
   has_many :project_section_details, dependent: :destroy
+  belongs_to :parent_project, class_name: "Project", optional: true
+  belongs_to :source_bom_item, class_name: "ProjectPart", optional: true
+  has_many :child_projects, class_name: "Project", foreign_key: :parent_project_id, dependent: :nullify, inverse_of: :parent_project
   accepts_nested_attributes_for :development_stages
 
   validates :title, :category, :summary, :problem, :target_users, :success_metric, presence: true
+  validates :project_type, inclusion: { in: PROJECT_TYPES }
 
   scope :recent, -> { order(created_at: :desc) }
 
@@ -146,6 +151,20 @@ class Project < ApplicationRecord
   end
 
   def workspace_sections
+    if component_project?
+      return {
+        "overview" => "概要",
+        "requirements" => "要求",
+        "bom" => "候補案",
+        "blueprints" => "設計",
+        "software" => "接続仕様",
+        "tests" => "試験",
+        "safety" => "リスク",
+        "tasks" => "タスク",
+        "artifacts" => "親プロジェクトへの反映"
+      }
+    end
+
     WORKSPACE_SECTIONS.each_with_object({}) do |(key, _label), labels|
       labels[key] = section_label(key)
     end
@@ -177,9 +196,18 @@ class Project < ApplicationRecord
     food? ? "細かいレシピ開発" : "細かい設計開発"
   end
 
+  def component_project?
+    project_type == "component_project"
+  end
+
+  def safety_review_required?
+    source_bom_item&.safety_critical?
+  end
+
   private
 
   def set_defaults
+    self.project_type = "main_project" if project_type.blank?
     self.status = "構想" if status.blank?
     self.participation_needs = "設計レビュー・調査・試作" if participation_needs.blank?
     self.specifications = "材料・寸法・性能・予算・安全条件を整理する" if specifications.blank?

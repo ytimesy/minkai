@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_14_032000) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_14_035000) do
   create_table "contributions", force: :cascade do |t|
     t.integer "project_id", null: false
     t.string "name"
@@ -60,6 +60,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_14_032000) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "procurement_policy", default: "undecided", null: false
+    t.string "requirement_ids"
+    t.string "test_ids"
+    t.integer "child_project_id"
+    t.string "development_status", default: "未テーマ化", null: false
+    t.index ["child_project_id"], name: "index_project_parts_on_child_project_id"
     t.index ["project_id"], name: "index_project_parts_on_project_id"
   end
 
@@ -159,15 +165,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_14_032000) do
     t.text "basic_design"
     t.text "detail_design"
     t.text "data_transition_design"
+    t.integer "parent_project_id"
+    t.integer "source_bom_item_id"
+    t.string "project_type", default: "main_project", null: false
+    t.index ["parent_project_id"], name: "index_projects_on_parent_project_id"
+    t.index ["source_bom_item_id"], name: "index_projects_on_source_bom_item_id"
   end
 
   add_foreign_key "contributions", "projects"
   add_foreign_key "development_stages", "projects"
   add_foreign_key "project_artifacts", "projects"
   add_foreign_key "project_parts", "projects"
+  add_foreign_key "project_parts", "projects", column: "child_project_id"
   add_foreign_key "project_risks", "projects"
   add_foreign_key "project_roles", "projects"
   add_foreign_key "project_section_details", "projects"
   add_foreign_key "project_tasks", "projects"
   add_foreign_key "project_test_items", "projects"
+  add_foreign_key "projects", "project_parts", column: "source_bom_item_id"
+  add_foreign_key "projects", "projects", column: "parent_project_id"
 end

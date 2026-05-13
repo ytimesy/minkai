@@ -6,6 +6,13 @@ Rails.application.routes.draw do
     get "sections/:section", to: "projects#section", as: :section
     resources :contributions, only: %i[create]
     resources :section_details, controller: "project_section_details", only: %i[create]
+    resources :parts, controller: "project_parts", only: [] do
+      member do
+        get "component/new", action: :new_component, as: :new_component
+        post "component", action: :create_component, as: :component
+        post "sync_from_child", action: :sync_from_child
+      end
+    end
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

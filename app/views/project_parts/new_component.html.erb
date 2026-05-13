@@ -1,0 +1,39 @@
+<main class="narrow-page">
+  <section class="project-detail">
+    <p class="eyebrow">部品を開発テーマ化</p>
+    <h1><%= @part.component_title %></h1>
+    <p class="lead compact">この部品を新しい子開発ページとして作成します。</p>
+
+    <div class="canvas-grid">
+      <section>
+        <h3>親プロジェクト</h3>
+        <p><%= @project.title %></p>
+      </section>
+      <section>
+        <h3>対象部品</h3>
+        <p><%= @part.tracking_id %> <%= @part.name %></p>
+      </section>
+      <section>
+        <h3>用途</h3>
+        <p><%= @part.purpose %></p>
+      </section>
+      <section>
+        <h3>関連ID</h3>
+        <p>要求: <%= @part.requirement_ids.presence || "未設定" %><br>試験: <%= @part.test_ids.presence || "未設定" %></p>
+      </section>
+      <section>
+        <h3>調達方針</h3>
+        <p><%= @part.procurement_policy_label %></p>
+      </section>
+      <section>
+        <h3>安全レビュー</h3>
+        <p><%= @part.safety_critical? ? "安全レビュー必須" : "通常レビュー" %></p>
+      </section>
+    </div>
+
+    <div class="detail-actions">
+      <%= link_to "戻る", project_section_path(@project, section: "bom"), class: "button button-secondary" %>
+      <%= button_to "作成する", component_project_part_path(@project, @part), method: :post, class: "button" %>
+    </div>
+  </section>
+</main>
