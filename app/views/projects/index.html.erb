@@ -4,21 +4,21 @@
       <p class="eyebrow">Open development village</p>
       <h1>みんなの開発村</h1>
       <p class="lead">
-        アイデアを、要求仕様・設計・部品表・試験項目へ分解する共同開発ワークスペース。
+        機械、ロボット、政策、Webサイト、料理まで。誰でも開発テーマを持ち込み、
+        設計の論点を整理しながら、協力者と前に進める場所です。
       </p>
       <div class="hero-actions">
         <%= link_to "開発テーマを投稿", new_project_path, class: "button" %>
         <%= link_to "公開中のテーマを見る", "#projects", class: "button button-secondary" %>
       </div>
     </div>
-    <aside class="design-board robot-hero-panel" aria-label="設計支援の観点">
-      <img src="/images/robot-hero.jpg" alt="ロボット開発ワークスペースのイメージ">
-      <h2>~~~ Development Drill Menu ~~~</h2>
+    <aside class="design-board" aria-label="設計支援の観点">
+      <h2>設計キャンバス</h2>
       <ul>
-        <li><span>REQ</span> 要求仕様</li>
-        <li><span>BOM</span> 部品表</li>
-        <li><span>TEST</span> 試験項目</li>
-        <li><span>LOG</span> 開発ログ</li>
+        <li><span>1</span> 誰の課題か</li>
+        <li><span>2</span> 成功条件は何か</li>
+        <li><span>3</span> どの専門性が必要か</li>
+        <li><span>4</span> 次の試作は何か</li>
       </ul>
     </aside>
   </section>
@@ -27,7 +27,7 @@
     <div class="section-heading">
       <div>
         <p class="eyebrow">Projects</p>
-        <h2>~~~ Development Table of Contents ~~~</h2>
+        <h2>開発テーマ</h2>
       </div>
       <%= link_to "新しく投稿", new_project_path, class: "button button-small" %>
     </div>

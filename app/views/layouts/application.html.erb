@@ -31,10 +31,6 @@
         <%= link_to "みんなの開発村", root_path, class: "brand" %>
         <nav>
           <%= link_to "開発テーマ", projects_path %>
-          <%= link_to "ロボット", "#{projects_path}#projects" %>
-          <%= link_to "料理", "#{projects_path}#projects" %>
-          <%= link_to "政策", "#{projects_path}#projects" %>
-          <%= link_to "Web", "#{projects_path}#projects" %>
           <%= link_to "投稿する", new_project_path, class: "button button-small" %>
         </nav>
       </div>
@@ -54,12 +50,5 @@
     <% end %>
 
     <%= yield %>
-
-    <footer class="site-footer">
-      <%= link_to "みんなの開発村", root_path %>
-      <%= link_to "開発テーマ", projects_path %>
-      <%= link_to "新しいテーマ", new_project_path %>
-      <span>Robot development drills / requirements / BOM / tests</span>
-    </footer>
   </body>
 </html>
