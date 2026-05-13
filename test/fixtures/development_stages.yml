@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project: one
+  phase: 初期
+  image_description: 荷台と車輪の構想図
+  model_description: 紙スケッチ
+  blueprint_notes: 部品構成を整理
+  position: 1
+
+two:
+  project: one
+  phase: 完成
+  image_description: 避難所で使われる完成図
+  model_description: 実寸試作品
+  blueprint_notes: 保守手順を整理
+  position: 4

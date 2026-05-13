@@ -16,6 +16,11 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should get edit" do
+    get edit_project_url(projects(:one))
+    assert_response :success
+  end
+
   test "should create project" do
     assert_difference("Project.count") do
       post projects_url, params: {
@@ -27,11 +32,48 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
           target_users: "住民と自治体職員",
           success_metric: "必要な申請に3分以内で到達できる",
           status: "構想",
-          participation_needs: "UI設計"
+          participation_needs: "UI設計",
+          specifications: "スマートフォン対応、3分以内に申請到達",
+          features: "申請検索、必要書類チェック、進捗確認"
         }
       }
     end
 
     assert_redirected_to project_url(Project.last)
+    assert_equal 4, Project.last.development_stages.count
+  end
+
+  test "should update project planning fields" do
+    project = projects(:one)
+
+    patch project_url(project), params: {
+      project: {
+        title: project.title,
+        category: project.category,
+        summary: project.summary,
+        problem: project.problem,
+        target_users: project.target_users,
+        success_metric: project.success_metric,
+        status: "検証中",
+        participation_needs: project.participation_needs,
+        specifications: "耐荷重30kgに更新",
+        features: "遠隔停止を追加",
+        development_stages_attributes: {
+          "0" => {
+            id: development_stages(:one).id,
+            phase: "初期",
+            position: 1,
+            image_description: "更新した構想図",
+            model_description: "更新した紙模型",
+            blueprint_notes: "更新した設計図"
+          }
+        }
+      }
+    }
+
+    assert_redirected_to project_url(project)
+    project.reload
+    assert_equal "耐荷重30kgに更新", project.specifications
+    assert_equal "更新した構想図", development_stages(:one).reload.image_description
   end
 end

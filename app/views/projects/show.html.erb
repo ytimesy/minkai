@@ -4,6 +4,9 @@
       <span><%= @project.category %></span>
       <span><%= @project.status %></span>
     </div>
+    <div class="detail-actions">
+      <%= link_to "開発内容を編集", edit_project_path(@project), class: "button button-small" %>
+    </div>
     <h1><%= @project.title %></h1>
     <p class="lead compact"><%= @project.summary %></p>
 
@@ -24,7 +27,47 @@
         <h2>参加してほしいこと</h2>
         <p><%= @project.participation_needs %></p>
       </section>
+      <section>
+        <h2>仕様</h2>
+        <%= simple_format(@project.specifications) %>
+      </section>
+      <section>
+        <h2>機能</h2>
+        <%= simple_format(@project.features) %>
+      </section>
     </div>
+
+    <section class="stage-roadmap">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow">Build roadmap</p>
+          <h2>製造・開発イメージ</h2>
+        </div>
+      </div>
+
+      <div class="stage-grid">
+        <% @project.development_stages.each do |stage| %>
+          <article class="stage-card">
+            <div class="stage-visual" aria-label="<%= stage.phase %>のイメージ図">
+              <div class="visual-axis"></div>
+              <div class="visual-block visual-main"><%= stage.phase %></div>
+              <div class="visual-block visual-sub"></div>
+              <div class="visual-line"></div>
+            </div>
+            <div class="card-meta">
+              <span><%= stage.phase %></span>
+              <span>設計図</span>
+            </div>
+            <h3>イメージ図</h3>
+            <p><%= stage.image_description %></p>
+            <h3>モデル</h3>
+            <p><%= stage.model_description %></p>
+            <h3>設計図メモ</h3>
+            <p><%= stage.blueprint_notes %></p>
+          </article>
+        <% end %>
+      </div>
+    </section>
   </section>
 
   <aside class="contribution-panel">

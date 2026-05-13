@@ -52,5 +52,47 @@
     <%= form.text_field :participation_needs, placeholder: "例: 設計レビュー、試作、法制度調査、レシピ検証" %>
   </div>
 
-  <%= form.submit "開発テーマを公開する", class: "button" %>
+  <div class="field">
+    <%= form.label :specifications, "仕様" %>
+    <%= form.text_area :specifications, rows: 5, placeholder: "材料、寸法、性能、対象環境、安全条件、予算など。" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :features, "機能" %>
+    <%= form.text_area :features, rows: 5, placeholder: "利用者ができること、管理者ができること、優先度、将来追加したい機能。" %>
+  </div>
+
+  <section class="stage-form-section">
+    <div>
+      <p class="eyebrow">Development stages</p>
+      <h2>製造・開発の4段階</h2>
+    </div>
+
+    <div class="stage-form-grid">
+      <%= form.fields_for :development_stages do |stage_form| %>
+        <article class="stage-form-card">
+          <%= stage_form.hidden_field :phase %>
+          <%= stage_form.hidden_field :position %>
+          <h3><%= stage_form.object.phase %></h3>
+
+          <div class="field">
+            <%= stage_form.label :image_description, "イメージ図" %>
+            <%= stage_form.text_area :image_description, rows: 3, placeholder: "この段階で見せたい外観・利用場面。" %>
+          </div>
+
+          <div class="field">
+            <%= stage_form.label :model_description, "モデル" %>
+            <%= stage_form.text_area :model_description, rows: 3, placeholder: "スケッチ、試作、画面、模型、運用モデルなど。" %>
+          </div>
+
+          <div class="field">
+            <%= stage_form.label :blueprint_notes, "設計図メモ" %>
+            <%= stage_form.text_area :blueprint_notes, rows: 3, placeholder: "寸法、構成、工程、検証項目。" %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </section>
+
+  <%= form.submit project.persisted? ? "開発内容を更新する" : "開発テーマを公開する", class: "button" %>
 <% end %>

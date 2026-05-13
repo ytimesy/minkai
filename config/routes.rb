@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "projects#index"
 
-  resources :projects, only: %i[index show new create] do
+  resources :projects, only: %i[index show new create edit update] do
     resources :contributions, only: %i[create]
   end
 
