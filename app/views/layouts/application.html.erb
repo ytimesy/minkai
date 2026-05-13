@@ -27,11 +27,22 @@
 
   <body>
     <header class="site-header">
-      <%= link_to "みんなの開発村", root_path, class: "brand" %>
-      <nav>
-        <%= link_to "開発テーマ", projects_path %>
-        <%= link_to "投稿する", new_project_path, class: "button button-small" %>
-      </nav>
+      <div class="topbar">
+        <%= link_to "みんなの開発村", root_path, class: "brand" %>
+        <nav>
+          <%= link_to "開発テーマ", projects_path %>
+          <%= link_to "投稿する", new_project_path, class: "button button-small" %>
+        </nav>
+      </div>
+
+      <% if defined?(@project) && @project&.persisted? %>
+        <nav class="workspace-header-nav" aria-label="開発ワークスペース">
+          <% Project::WORKSPACE_SECTIONS.each do |section_key, section_label| %>
+            <% path = section_key == "overview" ? project_path(@project) : project_section_path(@project, section: section_key) %>
+            <%= link_to section_label, path, class: ("active" if @section == section_key) %>
+          <% end %>
+        </nav>
+      <% end %>
     </header>
 
     <% flash.each do |type, message| %>

@@ -1,382 +1,334 @@
-<main class="project-page">
+<main class="workspace-page">
   <section class="project-detail">
     <div class="card-meta">
       <span><%= @project.category %></span>
       <span><%= @project.status %></span>
     </div>
+    <p class="eyebrow"><%= @section_label %></p>
     <h1><%= @project.title %></h1>
     <p class="lead compact"><%= @project.summary %></p>
 
-    <div class="document-nav">
-      <a href="#overview">概要</a>
-      <a href="#requirements">要求仕様</a>
-      <a href="#blueprints">設計図</a>
-      <a href="#bom">部品表</a>
-      <a href="#software">ソフトウェア</a>
-      <a href="#safety">安全設計</a>
-      <a href="#manufacturing">製造手順</a>
-      <a href="#tests">試験項目</a>
-      <a href="#tasks">タスク</a>
-      <a href="#log">開発ログ</a>
-      <a href="#join">参加募集</a>
-      <a href="#artifacts">成果物</a>
-    </div>
-
-    <div class="priority-grid">
-      <a href="#requirements">要求仕様</a>
-      <a href="#blueprints">設計図</a>
-      <a href="#bom">部品表</a>
-      <a href="#safety">安全設計</a>
-      <a href="#tests">試験項目</a>
-    </div>
-
-    <section class="maturity-panel">
-      <div>
-        <p class="eyebrow">Workspace maturity</p>
-        <h2>開発成熟度 <%= @project.maturity_score %> / 100</h2>
-      </div>
-      <div class="maturity-bars">
-        <% @project.maturity_breakdown.each do |label, value| %>
-          <div class="maturity-row">
-            <span><%= label %></span>
-            <div class="maturity-track"><i style="width: <%= value %>%"></i></div>
-            <strong><%= value %>%</strong>
-          </div>
-        <% end %>
-      </div>
-    </section>
-
-    <section class="document-section" id="overview">
-      <p class="eyebrow">Overview</p>
-      <h2>プロジェクト概要</h2>
-      <div class="canvas-grid">
-        <section>
-          <h3>目的</h3>
-          <%= simple_format(@project.problem) %>
-        </section>
-        <section>
-          <h3>想定用途</h3>
-          <%= simple_format(@project.intended_uses) %>
-        </section>
-        <section>
-          <h3>現在の段階</h3>
-          <p><%= @project.status %></p>
-        </section>
-        <section>
-          <h3>次の試作</h3>
-          <%= simple_format(@project.next_prototype) %>
-        </section>
-      </div>
-    </section>
-
-    <section class="document-section" id="requirements">
-      <p class="eyebrow">Requirements</p>
-      <h2>要求仕様</h2>
-      <div class="canvas-grid">
-        <section>
-          <h3>誰の課題か</h3>
-          <%= simple_format(@project.target_users) %>
-        </section>
-        <section>
-          <h3>できること</h3>
-          <%= simple_format(@project.features) %>
-        </section>
-        <section>
-          <h3>やらないこと</h3>
-          <%= simple_format(@project.scope_limits) %>
-        </section>
-        <section>
-          <h3>成功条件</h3>
-          <%= simple_format(@project.success_metric) %>
-        </section>
-      </div>
-    </section>
-
-    <div class="canvas-grid">
-      <section>
-        <h2>解きたい課題</h2>
-        <%= simple_format(@project.problem) %>
-      </section>
-      <section>
-        <h2>使う人・影響を受ける人</h2>
-        <%= simple_format(@project.target_users) %>
-      </section>
-      <section>
-        <h2>成功条件</h2>
-        <%= simple_format(@project.success_metric) %>
-      </section>
-      <section>
-        <h2>参加してほしいこと</h2>
-        <p><%= @project.participation_needs %></p>
-      </section>
-      <section>
-        <h2>仕様</h2>
-        <%= simple_format(@project.specifications) %>
-      </section>
-      <section>
-        <h2>機能</h2>
-        <%= simple_format(@project.features) %>
-      </section>
-    </div>
-
-    <section class="stage-roadmap document-section">
-      <div class="section-heading compact-heading">
+    <% case @section %>
+    <% when "overview" %>
+      <section class="maturity-panel">
         <div>
-          <p class="eyebrow">Build roadmap</p>
-          <h2>製造・開発イメージ</h2>
+          <p class="eyebrow">Workspace maturity</p>
+          <h2>開発成熟度 <%= @project.maturity_score %> / 100</h2>
         </div>
-      </div>
-
-      <div class="stage-grid">
-        <% @project.development_stages.each do |stage| %>
-          <article class="stage-card">
-            <div class="stage-visual" aria-label="<%= stage.phase %>のイメージ図">
-              <div class="visual-axis"></div>
-              <div class="visual-block visual-main"><%= stage.phase %></div>
-              <div class="visual-block visual-sub"></div>
-              <div class="visual-line"></div>
-            </div>
-            <div class="card-meta">
-              <span><%= stage.phase %></span>
-              <span>設計図</span>
-            </div>
-            <h3>イメージ図</h3>
-            <p><%= stage.image_description %></p>
-            <h3>モデル</h3>
-            <p><%= stage.model_description %></p>
-            <h3>設計図メモ</h3>
-            <p><%= stage.blueprint_notes %></p>
-          </article>
-        <% end %>
-      </div>
-    </section>
-
-    <section class="document-section" id="blueprints">
-      <p class="eyebrow">Blueprints</p>
-      <h2>設計図</h2>
-      <div class="blueprint-grid">
-        <article class="diagram-card">
-          <h3>システム全体図</h3>
-          <div class="flow-diagram">
-            <span>人の指示</span>
-            <span>音声 / テキスト / ボタン</span>
-            <span>指示解釈</span>
-            <span>行動計画</span>
-            <span>モーター制御</span>
-            <span>車輪・本体移動</span>
-          </div>
-          <%= simple_format(@project.system_architecture) %>
-        </article>
-        <article class="diagram-card">
-          <h3>二輪差動の外形案</h3>
-          <div class="robot-blueprint" aria-label="小型ロボット設計図">
-            <div class="robot-body"></div>
-            <div class="robot-wheel left"></div>
-            <div class="robot-wheel right"></div>
-            <div class="robot-caster"></div>
-            <div class="robot-sensor"></div>
-            <div class="robot-stop">停止</div>
-          </div>
-          <%= simple_format(@project.mechanical_design) %>
-        </article>
-        <article class="diagram-card">
-          <h3>配線ブロック図</h3>
-          <div class="wiring-diagram">
-            <span>バッテリー</span>
-            <span>ヒューズ</span>
-            <span>非常停止</span>
-            <span>制御PC</span>
-            <span>モータードライバ</span>
-            <span>左右モーター</span>
-            <span>距離センサー</span>
-          </div>
-          <%= simple_format(@project.electrical_design) %>
-        </article>
-      </div>
-    </section>
-
-    <section class="document-section" id="bom">
-      <p class="eyebrow">Bill of materials</p>
-      <h2>部品表</h2>
-      <% if @project.project_parts.any? %>
-        <div class="data-table">
-          <div class="data-head">
-            <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補</span><span>価格</span><span>状態</span>
-          </div>
-          <% @project.project_parts.each do |part| %>
-            <div class="data-row">
-              <span><%= part.category %></span>
-              <span><%= part.name %></span>
-              <span><%= part.purpose %></span>
-              <span><%= part.quantity %></span>
-              <span><%= part.candidate %></span>
-              <span><%= part.estimated_price %></span>
-              <span><%= part.status %></span>
+        <div class="maturity-bars">
+          <% @project.maturity_breakdown.each do |label, value| %>
+            <div class="maturity-row">
+              <span><%= label %></span>
+              <div class="maturity-track"><i style="width: <%= value %>%"></i></div>
+              <strong><%= value %>%</strong>
             </div>
           <% end %>
         </div>
-      <% end %>
-      <%= simple_format(@project.bill_of_materials) %>
-    </section>
+      </section>
 
-    <section class="document-section" id="software">
-      <p class="eyebrow">Software</p>
-      <h2>ソフトウェア構成</h2>
-      <div class="software-flow">
-        <span>入力層</span>
-        <span>理解層</span>
-        <span>判断層</span>
-        <span>制御層</span>
-        <span>安全層</span>
-        <span>ログ</span>
-      </div>
-      <%= simple_format(@project.software_design) %>
-    </section>
+      <section class="document-section">
+        <h2>プロジェクト概要</h2>
+        <div class="canvas-grid">
+          <section>
+            <h3>目的</h3>
+            <%= simple_format(@project.problem) %>
+          </section>
+          <section>
+            <h3>想定用途</h3>
+            <%= simple_format(@project.intended_uses) %>
+          </section>
+          <section>
+            <h3>現在の段階</h3>
+            <p><%= @project.status %></p>
+          </section>
+          <section>
+            <h3>次の試作</h3>
+            <%= simple_format(@project.next_prototype) %>
+          </section>
+        </div>
+      </section>
 
-    <section class="document-section safety-section" id="safety">
-      <p class="eyebrow">Safety first</p>
-      <h2>安全設計</h2>
-      <% if @project.project_risks.any? %>
-        <div class="risk-grid">
-          <% @project.project_risks.each do |risk| %>
-            <article class="risk-card">
-              <div class="card-meta">
-                <span><%= risk.level %></span>
-                <span><%= risk.status %></span>
+      <section class="stage-roadmap document-section">
+        <p class="eyebrow">Build roadmap</p>
+        <h2>製造・開発イメージ</h2>
+        <div class="stage-grid">
+          <% @project.development_stages.each do |stage| %>
+            <article class="stage-card">
+              <div class="stage-visual" aria-label="<%= stage.phase %>のイメージ図">
+                <div class="visual-axis"></div>
+                <div class="visual-block visual-main"><%= stage.phase %></div>
+                <div class="visual-block visual-sub"></div>
+                <div class="visual-line"></div>
               </div>
-              <h3><%= risk.hazard %></h3>
-              <dl>
-                <div><dt>事故</dt><dd><%= risk.accident %></dd></div>
-                <div><dt>原因</dt><dd><%= risk.cause %></dd></div>
-                <div><dt>対策</dt><dd><%= risk.mitigation %></dd></div>
-                <div><dt>試験</dt><dd><%= risk.test_method %></dd></div>
-              </dl>
+              <div class="card-meta">
+                <span><%= stage.phase %></span>
+                <span>設計図</span>
+              </div>
+              <h3>イメージ図</h3>
+              <p><%= stage.image_description %></p>
+              <h3>モデル</h3>
+              <p><%= stage.model_description %></p>
+              <h3>設計図メモ</h3>
+              <p><%= stage.blueprint_notes %></p>
             </article>
           <% end %>
         </div>
-      <% end %>
-      <%= simple_format(@project.safety_design) %>
-    </section>
+      </section>
 
-    <section class="document-section" id="manufacturing">
-      <p class="eyebrow">Manufacturing</p>
-      <h2>製造手順</h2>
-      <%= simple_format(@project.manufacturing_steps) %>
-    </section>
-
-    <section class="document-section" id="tests">
-      <p class="eyebrow">Verification</p>
-      <h2>試験項目</h2>
-      <% if @project.project_test_items.any? %>
-        <div class="test-list">
-          <% @project.project_test_items.each do |item| %>
-            <article class="test-item">
-              <strong><%= item.title %></strong>
-              <span><%= item.status %></span>
-              <p><%= item.acceptance_criteria %></p>
-              <small><%= item.test_method %></small>
-            </article>
-          <% end %>
+    <% when "requirements" %>
+      <section class="document-section">
+        <h2>要求仕様</h2>
+        <div class="canvas-grid">
+          <section>
+            <h3>誰の課題か</h3>
+            <%= simple_format(@project.target_users) %>
+          </section>
+          <section>
+            <h3>できること</h3>
+            <%= simple_format(@project.features) %>
+          </section>
+          <section>
+            <h3>MVPでやらないこと</h3>
+            <%= simple_format(@project.scope_limits) %>
+          </section>
+          <section>
+            <h3>成功条件</h3>
+            <%= simple_format(@project.success_metric) %>
+          </section>
+          <section>
+            <h3>仕様</h3>
+            <%= simple_format(@project.specifications) %>
+          </section>
         </div>
-      <% end %>
-      <%= simple_format(@project.test_plan) %>
-    </section>
+      </section>
 
-    <section class="document-section" id="tasks">
-      <p class="eyebrow">Tasks</p>
-      <h2>試作タスク</h2>
-      <div class="task-board">
-        <% @project.project_tasks.each do |task| %>
-          <article>
-            <span><%= task.status %></span>
-            <h3><%= task.title %></h3>
-            <p><%= task.description %></p>
-            <small><%= task.related_area %> / <%= task.assignee.presence || "募集中" %></small>
+    <% when "blueprints" %>
+      <section class="document-section">
+        <h2>設計図</h2>
+        <div class="blueprint-grid">
+          <article class="diagram-card">
+            <h3>システム全体図</h3>
+            <div class="flow-diagram">
+              <span>人の指示</span>
+              <span>音声 / テキスト / ボタン</span>
+              <span>指示解釈</span>
+              <span>行動計画</span>
+              <span>モーター制御</span>
+              <span>車輪・本体移動</span>
+            </div>
+            <%= simple_format(@project.system_architecture) %>
           </article>
-        <% end %>
-      </div>
-    </section>
+          <article class="diagram-card">
+            <h3>二輪差動の外形案</h3>
+            <div class="robot-blueprint" aria-label="小型ロボット設計図">
+              <div class="robot-body"></div>
+              <div class="robot-wheel left"></div>
+              <div class="robot-wheel right"></div>
+              <div class="robot-caster"></div>
+              <div class="robot-sensor"></div>
+              <div class="robot-stop">停止</div>
+            </div>
+            <%= simple_format(@project.mechanical_design) %>
+          </article>
+          <article class="diagram-card">
+            <h3>配線ブロック図</h3>
+            <div class="wiring-diagram">
+              <span>バッテリー</span>
+              <span>ヒューズ</span>
+              <span>非常停止</span>
+              <span>制御PC</span>
+              <span>モータードライバ</span>
+              <span>左右モーター</span>
+              <span>距離センサー</span>
+            </div>
+            <%= simple_format(@project.electrical_design) %>
+          </article>
+        </div>
+      </section>
 
-    <section class="document-section" id="log">
-      <p class="eyebrow">Development log</p>
-      <h2>開発ログ</h2>
-      <%= simple_format(@project.development_log) %>
-    </section>
-
-    <section class="document-section" id="artifacts">
-      <p class="eyebrow">Artifacts</p>
-      <h2>成果物</h2>
-      <div class="artifact-grid">
-        <% @project.project_artifacts.each do |artifact| %>
-          <article>
-            <span><%= artifact.kind %></span>
-            <h3><%= artifact.title %></h3>
-            <p><%= artifact.notes %></p>
-            <% if artifact.url.present? %>
-              <%= link_to "開く", artifact.url, target: "_blank", rel: "noopener" %>
+    <% when "bom" %>
+      <section class="document-section">
+        <h2>部品表</h2>
+        <% if @project.project_parts.any? %>
+          <div class="data-table">
+            <div class="data-head">
+              <span>カテゴリ</span><span>部品名</span><span>用途</span><span>数量</span><span>候補</span><span>価格</span><span>状態</span>
+            </div>
+            <% @project.project_parts.each do |part| %>
+              <div class="data-row">
+                <span><%= part.category %></span>
+                <span><%= part.name %></span>
+                <span><%= part.purpose %></span>
+                <span><%= part.quantity %></span>
+                <span><%= part.candidate %></span>
+                <span><%= part.estimated_price %></span>
+                <span><%= part.status %></span>
+              </div>
             <% end %>
-          </article>
-        <% end %>
-      </div>
-    </section>
-  </section>
-
-  <aside class="contribution-panel" id="join">
-    <h2>参加募集</h2>
-    <div class="role-grid">
-      <% @project.project_roles.each do |role| %>
-        <article>
-          <h3><%= role.name %></h3>
-          <p><%= role.description %></p>
-          <a href="#new_contribution" class="button button-small button-secondary">この役割で参加する</a>
-        </article>
-      <% end %>
-    </div>
-    <p><%= @project.participation_needs %></p>
-
-    <%= form_with model: [@project, @contribution], class: "contribution-form", id: "new_contribution" do |form| %>
-      <% if @contribution.errors.any? %>
-        <div class="errors">
-          <strong>入力内容を確認してください。</strong>
-        </div>
-      <% end %>
-
-      <div class="form-grid">
-        <div class="field">
-          <%= form.label :name, "名前" %>
-          <%= form.text_field :name, placeholder: "表示名" %>
-        </div>
-        <div class="field">
-          <%= form.label :kind, "種類" %>
-          <%= form.select :kind, Contribution::KINDS %>
-        </div>
-      </div>
-
-      <div class="field">
-        <%= form.label :role, "立場・得意分野" %>
-        <%= form.text_field :role, placeholder: "例: 機械設計、料理研究、行政実務" %>
-      </div>
-
-      <div class="field">
-        <%= form.label :body, "内容" %>
-        <%= form.text_area :body, rows: 5, placeholder: "提案、懸念、手伝えることを書いてください。" %>
-      </div>
-
-      <%= form.submit "参加メモを追加", class: "button" %>
-    <% end %>
-
-    <div class="contribution-list">
-      <% @project.contributions.order(created_at: :desc).each do |contribution| %>
-        <% next if contribution.new_record? %>
-        <article class="contribution">
-          <div class="card-meta">
-            <span><%= contribution.kind %></span>
-            <span><%= contribution.role %></span>
           </div>
-          <h3><%= contribution.name %></h3>
-          <%= simple_format(contribution.body) %>
-        </article>
-      <% end %>
-    </div>
-  </aside>
+        <% end %>
+        <%= simple_format(@project.bill_of_materials) %>
+      </section>
+
+    <% when "software" %>
+      <section class="document-section">
+        <h2>ソフトウェア構成</h2>
+        <div class="software-flow">
+          <span>入力層</span>
+          <span>理解層</span>
+          <span>判断層</span>
+          <span>制御層</span>
+          <span>安全層</span>
+          <span>ログ</span>
+        </div>
+        <%= simple_format(@project.software_design) %>
+      </section>
+
+    <% when "safety" %>
+      <section class="document-section safety-section">
+        <h2>安全設計</h2>
+        <% if @project.project_risks.any? %>
+          <div class="risk-grid">
+            <% @project.project_risks.each do |risk| %>
+              <article class="risk-card">
+                <div class="card-meta">
+                  <span><%= risk.level %></span>
+                  <span><%= risk.status %></span>
+                </div>
+                <h3><%= risk.hazard %></h3>
+                <dl>
+                  <div><dt>事故</dt><dd><%= risk.accident %></dd></div>
+                  <div><dt>原因</dt><dd><%= risk.cause %></dd></div>
+                  <div><dt>対策</dt><dd><%= risk.mitigation %></dd></div>
+                  <div><dt>試験</dt><dd><%= risk.test_method %></dd></div>
+                </dl>
+              </article>
+            <% end %>
+          </div>
+        <% end %>
+        <%= simple_format(@project.safety_design) %>
+      </section>
+
+    <% when "manufacturing" %>
+      <section class="document-section">
+        <h2>製造手順</h2>
+        <%= simple_format(@project.manufacturing_steps) %>
+      </section>
+
+    <% when "tests" %>
+      <section class="document-section">
+        <h2>試験項目</h2>
+        <% if @project.project_test_items.any? %>
+          <div class="test-list">
+            <% @project.project_test_items.each do |item| %>
+              <article class="test-item">
+                <strong><%= item.title %></strong>
+                <span><%= item.status %></span>
+                <p><%= item.acceptance_criteria %></p>
+                <small><%= item.test_method %></small>
+              </article>
+            <% end %>
+          </div>
+        <% end %>
+        <%= simple_format(@project.test_plan) %>
+      </section>
+
+    <% when "tasks" %>
+      <section class="document-section">
+        <h2>試作タスク</h2>
+        <div class="task-board">
+          <% @project.project_tasks.each do |task| %>
+            <article>
+              <span><%= task.status %></span>
+              <h3><%= task.title %></h3>
+              <p><%= task.description %></p>
+              <small><%= task.related_area %> / <%= task.assignee.presence || "募集中" %></small>
+            </article>
+          <% end %>
+        </div>
+      </section>
+
+    <% when "log" %>
+      <section class="document-section">
+        <h2>開発ログ</h2>
+        <%= simple_format(@project.development_log) %>
+      </section>
+
+    <% when "join" %>
+      <section class="document-section">
+        <h2>参加募集</h2>
+        <div class="role-grid workspace-role-grid">
+          <% @project.project_roles.each do |role| %>
+            <article>
+              <h3><%= role.name %></h3>
+              <p><%= role.description %></p>
+            </article>
+          <% end %>
+        </div>
+        <p><%= @project.participation_needs %></p>
+
+        <%= form_with model: [@project, @contribution], class: "contribution-form", id: "new_contribution" do |form| %>
+          <% if @contribution.errors.any? %>
+            <div class="errors">
+              <strong>入力内容を確認してください。</strong>
+            </div>
+          <% end %>
+
+          <div class="form-grid">
+            <div class="field">
+              <%= form.label :name, "名前" %>
+              <%= form.text_field :name, placeholder: "表示名" %>
+            </div>
+            <div class="field">
+              <%= form.label :kind, "種類" %>
+              <%= form.select :kind, Contribution::KINDS %>
+            </div>
+          </div>
+
+          <div class="field">
+            <%= form.label :role, "立場・得意分野" %>
+            <%= form.text_field :role, placeholder: "例: 機械設計、電気設計、安全レビュー" %>
+          </div>
+
+          <div class="field">
+            <%= form.label :body, "内容" %>
+            <%= form.text_area :body, rows: 5, placeholder: "レビュー、調査、部品候補、試作ログ、テスト結果を書いてください。" %>
+          </div>
+
+          <%= form.submit "成果物カードを追加", class: "button" %>
+        <% end %>
+
+        <div class="contribution-list">
+          <% @project.contributions.order(created_at: :desc).each do |contribution| %>
+            <% next if contribution.new_record? %>
+            <article class="contribution">
+              <div class="card-meta">
+                <span><%= contribution.kind %></span>
+                <span><%= contribution.role %></span>
+              </div>
+              <h3><%= contribution.name %></h3>
+              <%= simple_format(contribution.body) %>
+            </article>
+          <% end %>
+        </div>
+      </section>
+
+    <% when "artifacts" %>
+      <section class="document-section">
+        <h2>成果物</h2>
+        <div class="artifact-grid">
+          <% @project.project_artifacts.each do |artifact| %>
+            <article>
+              <span><%= artifact.kind %></span>
+              <h3><%= artifact.title %></h3>
+              <p><%= artifact.notes %></p>
+              <% if artifact.url.present? %>
+                <%= link_to "開く", artifact.url, target: "_blank", rel: "noopener" %>
+              <% end %>
+            </article>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </section>
 </main>

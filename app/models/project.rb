@@ -1,6 +1,20 @@
 class Project < ApplicationRecord
   CATEGORIES = %w[機械 ロボット 政策 Webサイト 料理 研究 その他].freeze
   STATUSES = %w[構想 設計中 試作中 検証中 公開中].freeze
+  WORKSPACE_SECTIONS = {
+    "overview" => "概要",
+    "requirements" => "要求仕様",
+    "blueprints" => "設計図",
+    "bom" => "部品表",
+    "software" => "ソフトウェア",
+    "safety" => "安全設計",
+    "manufacturing" => "製造手順",
+    "tests" => "試験項目",
+    "tasks" => "タスク",
+    "log" => "開発ログ",
+    "join" => "参加募集",
+    "artifacts" => "成果物"
+  }.freeze
 
   has_many :contributions, dependent: :destroy
   has_many :development_stages, -> { order(:position) }, dependent: :destroy

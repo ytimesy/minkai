@@ -11,6 +11,17 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should get workspace sections" do
+    project = projects(:one)
+
+    Project::WORKSPACE_SECTIONS.each_key do |section|
+      next if section == "overview"
+
+      get project_section_url(project, section: section)
+      assert_response :success
+    end
+  end
+
   test "should get new" do
     get new_project_url
     assert_response :success

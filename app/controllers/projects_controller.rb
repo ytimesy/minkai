@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :require_admin!, only: %i[edit update]
+  before_action :set_project, only: %i[show section edit update]
 
   def index
     @projects = Project.recent
@@ -7,18 +8,36 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    @project = Project.find(params[:id])
+    prepare_workspace("overview")
+  end
+
+  def section
+    unless Project::WORKSPACE_SECTIONS.key?(params[:section])
+      redirect_to @project, alert: "指定されたページはありません。"
+      return
+    end
+
+    prepare_workspace(params[:section])
+    render :show
+  end
+
+  def edit
     @project.ensure_development_stages
-    @contribution = @project.contributions.build
+  end
+
+  def update
+    @project.ensure_development_stages
+
+    if @project.update(project_params)
+      redirect_to @project, notice: "開発内容を更新しました。"
+    else
+      @project.ensure_development_stages
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def new
     @project = Project.new
-  end
-
-  def edit
-    @project = Project.find(params[:id])
-    @project.ensure_development_stages
   end
 
   def create
@@ -31,19 +50,18 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def update
-    @project = Project.find(params[:id])
-    @project.ensure_development_stages
+  private
 
-    if @project.update(project_params)
-      redirect_to @project, notice: "開発内容を更新しました。"
-    else
-      @project.ensure_development_stages
-      render :edit, status: :unprocessable_entity
-    end
+  def set_project
+    @project = Project.find(params[:id] || params[:project_id])
   end
 
-  private
+  def prepare_workspace(section)
+    @section = section
+    @section_label = Project::WORKSPACE_SECTIONS.fetch(section)
+    @project.ensure_development_stages
+    @contribution = @project.contributions.build
+  end
 
   def project_params
     params.require(:project).permit(
