@@ -480,3 +480,247 @@ fried_egg.project_artifacts.destroy_all
 ].each do |title, kind, notes, status|
   fried_egg.project_artifacts.create!(title: title, kind: kind, notes: notes, status: status)
 end
+
+revate = Project.find_or_initialize_by(title: "Revateアプリ設計")
+revate.update!(
+  category: "Webサイト",
+  summary: "Revateを、要求仕様、画面導線、DB、運用、検証まで分解して設計するWebアプリ開発テーマ。",
+  problem: "アプリのアイデアを機能単位で整理しないまま進めると、画面、データ、運用、収益化の判断が曖昧になる。",
+  target_users: "Revateの企画者、UI設計者、Rails開発者、運用担当者、レビュー協力者。",
+  success_metric: <<~TEXT.strip,
+    REQ-001 初回利用者がRevateの目的を30秒以内に理解できる
+    REQ-002 ユーザー登録、ログイン、プロフィール編集ができる
+    REQ-003 投稿、検索、詳細閲覧、保存ができる
+    REQ-004 管理者が不適切投稿とユーザーを確認・非公開化できる
+    REQ-005 主要画面がスマートフォンで破綻なく使える
+    REQ-006 広告、課金、問い合わせなど運用導線を後から追加できる
+  TEXT
+  status: "設計中",
+  participation_needs: "UI設計、Rails実装、DB設計、広告設計、運用レビュー、テスト協力",
+  specifications: <<~TEXT.strip,
+    Revateは、利用者が価値ある情報や活動を見つけ、投稿し、保存し、必要に応じて問い合わせや参加へ進めるWebアプリとして設計する。
+    MVPでは、トップ、一覧、詳細、投稿、ログイン、マイページ、管理画面の最小構成を作る。
+  TEXT
+  features: <<~TEXT.strip,
+    ・トップでRevateの目的と主要カテゴリを示す
+    ・投稿一覧、検索、カテゴリ絞り込みを提供する
+    ・投稿詳細に概要、本文、画像、関連リンク、問い合わせ導線を表示する
+    ・ユーザー登録、ログイン、プロフィール編集を提供する
+    ・保存、いいね、閲覧履歴などの再訪導線を検討する
+    ・管理者が投稿とユーザーを確認できる
+  TEXT
+  intended_uses: <<~TEXT.strip,
+    ・新しいサービス案のMVP設計
+    ・Railsアプリの画面・DB・運用設計
+    ・広告、課金、問い合わせ導線の検討
+    ・ユーザー投稿型アプリの安全運用レビュー
+  TEXT
+  scope_limits: <<~TEXT.strip,
+    ・初期MVPでは複雑なSNS機能を入れない
+    ・リアルタイムチャットは後回しにする
+    ・決済や広告配信は設計だけ行い、本番接続は別フェーズにする
+    ・個人情報を過剰に集めない
+    ・不適切投稿への管理導線を最初から用意する
+  TEXT
+  system_architecture: <<~TEXT.strip,
+    ブラウザ → Railsコントローラ → 認証・権限 → 投稿/ユーザー/保存/問い合わせDB → 管理画面 → 通知・分析・広告導線。
+    初期はRails単体で構成し、画像保存、メール、分析、広告、決済は差し替え可能な外部連携として整理する。
+  TEXT
+  basic_design: <<~TEXT.strip,
+    基本設計では、利用者、投稿者、管理者の3ロールを置く。
+    主要導線は、トップ → 一覧 → 詳細 → 保存/問い合わせ/投稿 とする。
+    MVPでは、見つける、読む、投稿する、管理する、改善ログを残すことに絞る。
+  TEXT
+  detail_design: <<~TEXT.strip,
+    詳細設計では、投稿ステータス、公開範囲、カテゴリ、検索条件、保存、通報、管理者レビューを定義する。
+    画面ごとに、入力項目、必須項目、エラー、権限、空状態、スマホ表示を整理する。
+  TEXT
+  data_transition_design: <<~TEXT.strip,
+    下書き投稿 → レビュー待ち → 公開 → 更新 → 非公開/削除 の状態遷移を持たせる。
+    ユーザー登録 → プロフィール作成 → 投稿/保存 → 問い合わせ → 管理者レビュー → 改善ログ へつなげる。
+  TEXT
+  mechanical_design: <<~TEXT.strip,
+    画面案: トップ、投稿一覧、投稿詳細、新規投稿、編集、マイページ、管理ダッシュボード、問い合わせ。
+    導線: 目的理解、検索、比較、詳細確認、保存、投稿、管理レビュー。
+  TEXT
+  electrical_design: <<~TEXT.strip,
+    DB候補: users、profiles、posts、categories、saved_posts、inquiries、reports、admin_notes、attachments。
+    重要な制約は、公開ステータス、投稿者ID、カテゴリ、検索用テキスト、管理メモ、作成/更新日時。
+  TEXT
+  software_design: <<~TEXT.strip,
+    Rails MVCで実装する。
+    認証、投稿CRUD、検索、保存、問い合わせ、管理画面、権限、監査ログを順に分ける。
+    初期はサーバーサイドHTMLを中心にし、必要な箇所だけJavaScriptで補助する。
+  TEXT
+  safety_design: <<~TEXT.strip,
+    個人情報、スパム、不適切投稿、なりすまし、問い合わせ悪用、広告審査、著作権侵害をリスクとして扱う。
+    通報、非公開、管理者確認、入力制限、ログ保存、利用規約・プライバシーポリシーを設計項目に入れる。
+  TEXT
+  manufacturing_steps: <<~TEXT.strip,
+    1. 画面一覧とユーザー導線を決める
+    2. DB設計と状態遷移を作る
+    3. 投稿一覧と詳細を実装する
+    4. 投稿作成と編集を実装する
+    5. ログインとマイページを実装する
+    6. 管理画面と通報対応を実装する
+    7. スマホ表示を確認する
+    8. 問い合わせ、広告、課金導線の追加可否を検証する
+  TEXT
+  test_plan: <<~TEXT.strip,
+    □ トップから一覧・詳細へ進める
+    □ 投稿を作成・編集・非公開にできる
+    □ 検索とカテゴリ絞り込みができる
+    □ ログインユーザーだけが保存できる
+    □ 管理者が投稿を確認・非公開化できる
+    □ スマホで主要画面が崩れない
+    □ 問い合わせ導線が記録される
+  TEXT
+  development_log: <<~TEXT.strip,
+    2026-05-14 [要求仕様] RevateアプリのMVP要求を作成
+    2026-05-14 [画面案] トップ、一覧、詳細、投稿、管理画面を初期スコープに設定
+    2026-05-14 [DB設計] users、posts、categories、saved_posts、inquiries、reportsを候補に追加
+  TEXT
+  bill_of_materials: <<~TEXT.strip,
+    認証 / ユーザー登録とログイン / 1 / Rails標準認証またはDevise相当
+    投稿機能 / 投稿CRUD / 1 / postsテーブル
+    検索 / キーワード・カテゴリ検索 / 1 / SQL検索から開始
+    保存機能 / 再訪導線 / 1 / saved_postsテーブル
+    管理画面 / 投稿・通報確認 / 1 / admin namespace
+    問い合わせ / 外部連絡導線 / 1 / inquiriesテーブル
+  TEXT
+  next_prototype: "トップ、投稿一覧、投稿詳細、新規投稿、管理画面のワイヤーフレームを作り、DB設計と照合する。"
+)
+
+revate.ensure_development_stages
+revate.development_stages.each do |stage|
+  case stage.phase
+  when "初期"
+    stage.update!(
+      image_description: "トップ、一覧、詳細、投稿、管理画面のワイヤーフレームを作る。",
+      model_description: "利用者、投稿者、管理者の3ロールと主要導線を紙面で整理する。",
+      blueprint_notes: "MVPで必要な画面、DB、権限、状態遷移を一覧化する。"
+    )
+  when "中期"
+    stage.update!(
+      image_description: "Railsで投稿一覧、詳細、投稿作成、ログイン、管理画面の試作を作る。",
+      model_description: "posts、users、categories、saved_posts、inquiries、reportsを持つ試作DB。",
+      blueprint_notes: "画面ごとの入力項目、バリデーション、権限、空状態を詳細化する。"
+    )
+  when "後期"
+    stage.update!(
+      image_description: "スマホ表示、検索、保存、問い合わせ、管理者非公開フローを検証する。",
+      model_description: "実際の投稿データを入れ、一覧、詳細、管理画面を通しで確認できる検証版。",
+      blueprint_notes: "検索精度、投稿審査、問い合わせ記録、通報対応、運用リスクを試験結果に反映する。"
+    )
+  when "完成"
+    stage.update!(
+      image_description: "MVPリリースに必要な画面、DB、運用手順、テスト結果をまとめる。",
+      model_description: "投稿、検索、保存、問い合わせ、管理レビューが動く公開前パッケージ。",
+      blueprint_notes: "要求仕様、画面一覧、DB設計、運用手順、試験結果、改善ログを成果物化する。"
+    )
+  end
+end
+
+[
+  ["認証", "ユーザー登録・ログイン", "利用者と投稿者の識別", "1", "Rails標準認証", "未定", "Devise相当", "パスワード再設定と退会を後続検討", "buy", "REQ-002", "TEST-004", "候補あり", "設計中"],
+  ["投稿", "投稿CRUD", "投稿の作成、編集、公開、非公開", "1", "postsテーブル", "未定", "CMS連携", "公開ステータスと所有者権限が重要", "make", "REQ-003", "TEST-002", "開発対象", "設計中"],
+  ["検索", "検索・カテゴリ絞り込み", "投稿を探す", "1", "SQL検索", "未定", "全文検索エンジン", "初期はSQL検索で十分か検証", "make", "REQ-003", "TEST-003", "開発対象", "未着手"],
+  ["保存", "保存リスト", "再訪導線", "1", "saved_postsテーブル", "未定", "閲覧履歴", "ログイン必須にする", "make", "REQ-003", "TEST-004", "開発対象", "未着手"],
+  ["管理", "管理ダッシュボード", "投稿と通報の確認", "1", "admin namespace", "未定", "外部管理ツール", "不適切投稿の非公開化が必須", "make", "REQ-004", "TEST-005", "安全レビュー必須", "設計中"],
+  ["運用", "問い合わせ導線", "問い合わせと参加希望の記録", "1", "inquiriesテーブル", "未定", "外部フォーム", "スパム対策と個人情報管理が必要", "researching", "REQ-006", "TEST-007", "調査中", "未着手"]
+].each do |category, name, purpose, quantity, candidate, price, alternative, note, procurement_policy, requirement_ids, test_ids, development_status, status|
+  part = revate.project_parts.find_or_initialize_by(name: name)
+  part.update!(
+    category: category,
+    purpose: purpose,
+    quantity: quantity,
+    candidate: candidate,
+    estimated_price: price,
+    alternative: alternative,
+    note: note,
+    procurement_policy: procurement_policy,
+    requirement_ids: requirement_ids,
+    test_ids: test_ids,
+    development_status: development_status,
+    status: status
+  )
+end
+
+revate.project_risks.destroy_all
+[
+  ["個人情報の過剰取得", "利用者の不安、運用負荷", "登録項目を増やしすぎる", "高", "中", "中", "初期は最小項目にし、プライバシーポリシーを用意する", "登録フォーム確認", "退会・削除導線", "設計中"],
+  ["不適切投稿", "信頼低下、法的リスク", "投稿審査や通報導線がない", "高", "中", "高", "通報、非公開、管理者確認を実装する", "通報・非公開テスト", "審査基準", "対策設計中"],
+  ["問い合わせスパム", "運用負荷、通知品質低下", "フォーム制限がない", "中", "中", "中", "入力制限、ログ、管理確認を入れる", "スパム入力テスト", "CAPTCHA導入判断", "未検証"]
+].each do |hazard, accident, cause, severity, likelihood, level, mitigation, test_method, residual_issue, status|
+  revate.project_risks.create!(
+    hazard: hazard,
+    accident: accident,
+    cause: cause,
+    severity: severity,
+    likelihood: likelihood,
+    level: level,
+    mitigation: mitigation,
+    test_method: test_method,
+    residual_issue: residual_issue,
+    status: status
+  )
+end
+
+revate.project_test_items.destroy_all
+[
+  ["目的理解テスト", "REQ-001", "初回利用者にトップを見せ、目的を説明してもらう", "30秒以内にRevateの目的を説明できる", "未実施"],
+  ["投稿CRUDテスト", "REQ-003", "投稿作成、編集、公開、非公開を行う", "投稿状態が正しく変化する", "未実施"],
+  ["検索テスト", "REQ-003", "キーワードとカテゴリで投稿を検索する", "対象投稿へ到達できる", "未実施"],
+  ["保存テスト", "REQ-003", "ログイン後に投稿を保存し、マイページで確認する", "保存と解除ができる", "未実施"],
+  ["管理者非公開テスト", "REQ-004", "管理者が投稿を非公開化する", "一般画面から見えなくなる", "未実施"],
+  ["スマホ表示テスト", "REQ-005", "主要画面をスマートフォン幅で確認する", "文字やボタンが重ならない", "未実施"],
+  ["問い合わせ記録テスト", "REQ-006", "問い合わせフォームを送信する", "問い合わせが記録され、管理側で確認できる", "未実施"]
+].each do |title, relation, method, criteria, status|
+  revate.project_test_items.create!(
+    title: title,
+    success_relation: relation,
+    test_method: method,
+    acceptance_criteria: criteria,
+    status: status
+  )
+end
+
+revate.project_tasks.destroy_all
+[
+  ["トップと一覧のワイヤーフレームを作る", "REQ-001 / BOM-002 / SAFE-001 / TEST-001", "募集中", "未着手", "初回利用者が目的を理解し、一覧へ進める導線を作る。"],
+  ["postsテーブル設計を確定する", "REQ-003 / BOM-002 / SAFE-002 / TEST-002", "募集中", "作業中", "投稿ステータス、カテゴリ、公開範囲、所有者を定義する。"],
+  ["検索条件を決める", "REQ-003 / BOM-003 / SAFE-002 / TEST-003", "募集中", "未着手", "初期MVPで必要なキーワード、カテゴリ、並び順を決める。"],
+  ["管理者非公開フローを設計する", "REQ-004 / BOM-005 / SAFE-002 / TEST-005", "募集中", "レビュー待ち", "通報から非公開、管理メモまでの流れを作る。"],
+  ["問い合わせ導線を設計する", "REQ-006 / BOM-006 / SAFE-003 / TEST-007", "募集中", "未着手", "フォーム項目、通知、スパム対策、保存期間を決める。"]
+].each do |title, related_area, assignee, status, description|
+  revate.project_tasks.create!(
+    title: title,
+    related_area: related_area,
+    assignee: assignee,
+    status: status,
+    description: description
+  )
+end
+
+revate.project_roles.destroy_all
+[
+  ["UI設計", "トップ、一覧、詳細、投稿、管理画面のワイヤーフレームを作る。"],
+  ["Rails実装", "投稿CRUD、認証、検索、保存、管理画面を実装する。"],
+  ["DB設計", "users、posts、categories、saved_posts、inquiries、reportsを整理する。"],
+  ["運用レビュー", "不適切投稿、問い合わせ、個人情報、広告導線のリスクを確認する。"],
+  ["テスト協力", "スマホ表示、投稿、検索、保存、管理者非公開フローを試す。"]
+].each do |name, description|
+  revate.project_roles.create!(name: name, description: description, status: "募集中")
+end
+
+revate.project_artifacts.destroy_all
+[
+  ["要求仕様書", "仕様", "RevateのMVP要求、やらないこと、成功条件。", "作成中"],
+  ["画面一覧", "画面", "トップ、一覧、詳細、投稿、マイページ、管理画面の一覧。", "作成中"],
+  ["DB設計メモ", "DB", "users、posts、categories、saved_posts、inquiries、reportsの初期設計。", "作成中"],
+  ["運用リスク台帳", "リスク", "個人情報、不適切投稿、問い合わせスパムの対策。", "作成中"],
+  ["試験結果", "検証", "投稿、検索、保存、管理、スマホ表示の検証結果。", "未作成"],
+  ["MVPリリース手順", "運用", "初期公開、管理、問い合わせ、改善ログの手順。", "未作成"]
+].each do |title, kind, notes, status|
+  revate.project_artifacts.create!(title: title, kind: kind, notes: notes, status: status)
+end
